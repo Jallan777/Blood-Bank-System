@@ -1,5 +1,5 @@
 // NZ Blood Bank System.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+// Introduction Screen
 
 #include <iostream>
 using namespace std;
@@ -15,16 +15,11 @@ int main()
 
     cout << endl << "\tWelcome to the NZ Blood Bank System!" << endl;
     lineFunc(52,"*");
-
+    cout << endl << endl;
+    cout << "Regular weekly donations ensure blood and plasma are available for those in need." << endl;
+    cout << "The gift of blood can only be given from one person to another, and there is no substitute." << endl;
+    cout << "So it's nice to know New Zealand can rely on everyday heroes' generosity to keep the flow of blood and plasma going." << endl;
+    cout << "However, the need for blood and plasma is constant, so we're looking for more lifesavers." << endl;
+    cout << "By putting aside a small part of your day you can make a life-changing difference, you can become a lifesaver too!" << endl;
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
