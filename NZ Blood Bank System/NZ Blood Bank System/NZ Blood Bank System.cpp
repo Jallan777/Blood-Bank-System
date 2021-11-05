@@ -28,18 +28,54 @@ MenuRestart:
         cout << "So it's nice to know New Zealand can rely on everyday heroes' generosity to keep the flow of blood and plasma going." << endl;
         cout << "However, the need for blood and plasma is constant, so we're looking for more lifesavers." << endl;
         cout << "By putting aside a small part of your day you can make a life-changing difference, you can become a lifesaver too!" << endl;
-        cout << endl << "Press any button to return to the Menu..." << endl;
+        cout << endl << "Press Enter to return to the Menu..." << endl;
         cin.ignore();
         goto MenuRestart;
     }
     else if (menuInput == "2") {
         cout << endl << "\tNZ Blood Bank Contact Details" << endl;
         lineFunc(52, "*");
-        cout << endl << "Email Us: contact@nzblood.co.nz" << endl;
-        cout << "Give Us a Call: 0800 448 325" << endl;
-        cout << endl << "Press any button to return to the Menu..." << endl;
+        cout << endl << "Email Us:\t contact@nzblood.co.nz" << endl;
+        cout << "Give Us a Call:\t 0800 448 325" << endl;
+        cout << "Or come into any NZ Blood Donation center if you need more information" << endl;
+        cout << endl << "Press Enter to return to the Menu..." << endl;
         cin.ignore();
         goto MenuRestart;
+
+    }
+    else if (menuInput == "3") {
+        string loginChoice;
+    LoginRestart:
+        cout << endl << "\tLog In" << endl;
+        lineFunc(52, "*");
+        cout << endl << endl << "[1] Donor Login" << endl;
+        cout << "[2] Recipient Login" << endl;
+        cout << endl << endl << "[3] Return to Menu" << endl;
+        cout << endl << "Please select a valid option: "; cin >> loginChoice;
+        if (loginChoice == "1") {
+            cout << "DONOR LOGIN PORTAL" << endl;       //Portal to attach Donor Login
+            goto MenuRestart;
+        }
+        else if (loginChoice == "2") {
+            cout << "RECIPIENT LOGIN PORTAL" << endl;   //Portal to attach Recipient Login
+            goto MenuRestart;
+        }
+        else if (loginChoice == "3") {
+            cout << endl << "Returning to Menu..." << endl;
+            goto MenuRestart;
+        }
+        else {
+            cout << endl << "Please select a valid option"; 
+            goto LoginRestart;
+        }
+    }
+    else if (menuInput == "4") {
+        cout << "\tRegistration" << endl;
+        lineFunc(52, "*");
+        cout << endl << "Welcome to the NZ Blood Bank! \nPlease choose which type of account you wish to create: " << endl;
+        cout << endl << "[1] Register as a Donor" << endl;
+        cout << "[2] Register as a Recipient" << endl;
+        cout << endl << endl << "[3] Return to Menu" << endl;
 
     }
     else {
