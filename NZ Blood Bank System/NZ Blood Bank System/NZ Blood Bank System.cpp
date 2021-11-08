@@ -70,13 +70,31 @@ MenuRestart:
         }
     }
     else if (menuInput == "4") {
+        string regChoice;
+RegisterRestart:
         cout << "\tRegistration" << endl;
         lineFunc(52, "*");
         cout << endl << "Welcome to the NZ Blood Bank! \nPlease choose which type of account you wish to create: " << endl;
         cout << endl << "[1] Register as a Donor" << endl;
         cout << "[2] Register as a Recipient" << endl;
         cout << endl << endl << "[3] Return to Menu" << endl;
-
+        cout << endl << "Please select a valid option: "; cin >> regChoice;
+        if (regChoice == "1") {
+            cout << "DONOR REGISTRATION PORTAL" << endl;
+            goto MenuRestart;
+        }
+        else if (regChoice == "2") {
+            cout << "RECIPIENT REGISTRATION PORTAL" << endl;
+            goto MenuRestart;
+        }
+        else if (regChoice == "3") {
+            cout << endl << "Returning to Menu..." << endl;
+            goto MenuRestart;
+        }
+        else {
+            cout << endl << "Please select a valid option";
+            goto RegisterRestart;
+        }
     }
     else {
         cout << endl << "Please select a valid option" << endl;
