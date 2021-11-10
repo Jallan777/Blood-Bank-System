@@ -3,7 +3,7 @@
 
 #include <iostream>
 using namespace std;
-int bloodBankRepeat;
+
 
 void lineFunc(int length, string type) {
     for (int i = 0; i < length; i++)
