@@ -17,6 +17,7 @@ MenuRestart:
     cout << "[2] Contact Details" << endl;
     cout << "[3] Log In" << endl;
     cout << "[4] Register" << endl;
+    cout << "[5] Exit" << endl;
     cout << endl << "Please enter a selection: "; cin >> menuInput;
     cin.ignore();
     if (menuInput == "1") {
@@ -35,8 +36,8 @@ MenuRestart:
     else if (menuInput == "2") {
         cout << endl << "\tNZ Blood Bank Contact Details" << endl;
         lineFunc(52, "*");
-        cout << endl << "Email Us:\t contact@nzblood.co.nz" << endl;
-        cout << "Give Us a Call:\t 0800 448 325" << endl;
+        cout << endl << endl << "Email Us:\t contact@nzblood.co.nz" << endl;
+        cout << "Call Us:\t 0800 448 325" << endl;
         cout << "Or come into any NZ Blood Donation center if you need more information" << endl;
         cout << endl << "Press Enter to return to the Menu..." << endl;
         cin.ignore();
@@ -50,7 +51,8 @@ MenuRestart:
         lineFunc(52, "*");
         cout << endl << endl << "[1] Donor Login" << endl;
         cout << "[2] Recipient Login" << endl;
-        cout << endl << endl << "[3] Return to Menu" << endl;
+        cout << "[3] Admin Login" << endl;
+        cout << endl << endl << "[4] Return to Menu" << endl;
         cout << endl << "Please select a valid option: "; cin >> loginChoice;
         if (loginChoice == "1") {
             cout << "DONOR LOGIN PORTAL" << endl;       //Portal to attach Donor Login
@@ -60,7 +62,10 @@ MenuRestart:
             cout << "RECIPIENT LOGIN PORTAL" << endl;   //Portal to attach Recipient Login
             goto MenuRestart;
         }
-        else if (loginChoice == "3") {
+        else if (loginChoice == "4") {
+            goto MenuRestart;
+        }
+        else if (loginChoice == "5") {
             cout << endl << "Returning to Menu..." << endl;
             goto MenuRestart;
         }
@@ -74,7 +79,7 @@ MenuRestart:
 RegisterRestart:
         cout << "\tRegistration" << endl;
         lineFunc(52, "*");
-        cout << endl << "Welcome to the NZ Blood Bank! \nPlease choose which type of account you wish to create: " << endl;
+        cout << endl << endl << "Welcome to the NZ Blood Bank!\nPlease choose which type of account you wish to create: " << endl;
         cout << endl << "[1] Register as a Donor" << endl;
         cout << "[2] Register as a Recipient" << endl;
         cout << endl << endl << "[3] Return to Menu" << endl;
@@ -95,6 +100,10 @@ RegisterRestart:
             cout << endl << "Please select a valid option";
             goto RegisterRestart;
         }
+    }
+    else if (menuInput == "5") {
+        cout << endl << "Exiting..." << endl;
+        exit(1);
     }
     else {
         cout << endl << "Please select a valid option" << endl;
