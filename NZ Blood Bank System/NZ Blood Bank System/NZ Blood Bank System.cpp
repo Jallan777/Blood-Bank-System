@@ -3,6 +3,7 @@
 // Ainsley wrote this
 
 #include <iostream>
+#include "read_a_file_test.h"
 using namespace std;
 
 
@@ -195,8 +196,8 @@ RegisterRestart:
 
 int main()
 {
+    read_a_csv();
 
-
-    menuFunc();
+    //menuFunc();
 }
 

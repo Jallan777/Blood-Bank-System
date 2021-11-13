@@ -18,5 +18,13 @@
     <ClCompile Include="NZ Blood Bank System.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="read_a_file_test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="read_a_file_test.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
