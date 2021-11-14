@@ -7,7 +7,7 @@
 #include "read_a_file_test.h"
 using namespace std;
 
-
+// Struct to hold Donor Information and eventually transfer it to the CSV file
 struct donorInfo {
     string firstName;
     string lastName;
@@ -25,6 +25,7 @@ struct donorInfo {
     string password;
 };
 
+// Struct to hold Recipient Information and eventually transfer it to the CSV file
 struct recipientInfo {
     string recipientName;
     string physAddr;
@@ -33,20 +34,21 @@ struct recipientInfo {
     string username;
     string password;
 };
-
+ //Simple Function to write a line of variable length, with any character
 void lineFunc(int length, string type) {
     for (int i = 0; i < length; i++)
         cout << type;
 }
 
-void recipientRegFunc() {           //Styled to have naturally placed input
-    struct recipientInfo recipient;
+//Recipient Registration Function
+void recipientRegFunc() {           
+    struct recipientInfo recipient;     //Declares the relevant struct in the function to be able to fill struct with data
     cout << endl << endl;
     cout << "\tRecipient Registration" << endl;
     lineFunc(38, "*");
     cout << endl << "Register an account as a Blood Recipient" << endl << endl;
     cin.ignore();
-    cout << "Please input your information: ";
+    cout << "Please input your information: ";  //Takes user input and adds to struct
     cout << endl << "Full Recipient Name\t: "; getline(cin, recipient.recipientName);
     cout << "Physical Address\t: "; getline(cin, recipient.physAddr);
     cout << "Email Address\t\t: "; getline(cin, recipient.emailAddr);
