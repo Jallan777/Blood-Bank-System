@@ -3,9 +3,36 @@
 // Ainsley wrote this
 
 #include <iostream>
+#include <string>
 #include "read_a_file_test.h"
 using namespace std;
 
+
+struct donorInfo {
+    string firstName;
+    string lastName;
+    string dob;
+    string nationality;
+    string ethnicity;
+    string gender;
+    string underlyCond;
+    string bloodGroup;
+    string contactNum;
+    string emailAddr;
+    string physAddr;
+    string lastDonation = "";
+    string username;
+    string password;
+};
+
+struct recipientInfo {
+    string recipientName;
+    string physAddr;
+    string emailAddr;
+    string contactNum;
+    string username;
+    string password;
+};
 
 void lineFunc(int length, string type) {
     for (int i = 0; i < length; i++)
@@ -13,18 +40,22 @@ void lineFunc(int length, string type) {
 }
 
 void recipientRegFunc() {           //Styled to have naturally placed input
+    struct recipientInfo recipient;
     cout << endl << endl;
     cout << "\tRecipient Registration" << endl;
     lineFunc(38, "*");
     cout << endl << "Register an account as a Blood Recipient" << endl << endl;
+    cin.ignore();
     cout << "Please input your information: ";
-    cout << endl << "Recipient Name:\t";
-    cout << endl << "Physical Address:\t";
-    cout << endl << "Email Address:\t";
-    cout << endl << "Contact Number:\t";
-    cout << endl << "Username:\t";
-    cout << endl << "Password:\t";
+    cout << endl << "Full Recipient Name\t: "; getline(cin, recipient.recipientName);
+    cout << "Physical Address\t: "; getline(cin, recipient.physAddr);
+    cout << "Email Address\t\t: "; getline(cin, recipient.emailAddr);
+    cout << "Contact Number\t\t: "; getline(cin, recipient.contactNum);
+    cout << "Username\t\t: "; getline(cin, recipient.username);
+    cout << "Password\t\t: "; getline(cin, recipient.password);
     cout << endl << endl;
+    cout << "Thanks for Registering!" << endl;
+    cout << endl << "Returning to Menu..." << endl;
 }
 
 void recipientLoginFunc() {
@@ -39,26 +70,55 @@ void recipientLoginFunc() {
 
 
 void donorRegFunc() {               //Styled to have inputs all start on the same column
+    struct donorInfo donor;
+
+    string bloodSelect;
     cout << endl << endl;
     cout << "\tDonor Registration" << endl;
     lineFunc(34,"*");
     cout << endl << "Register an account as a Blood Donor" << endl << endl;
+    cin.ignore();
     cout << "Please input your information: ";
-    cout << endl << "First Name\t\t\t:";
-    cout << endl << "Last Name\t\t\t:";
-    cout << endl << "Date of Birth\t\t\t:";
-    cout << endl << "Nationality\t\t\t:";
-    cout << endl << "Ethnicity\t\t\t:";
-    cout << endl << "Gender\t\t\t\t:";
-    cout << endl << "Known Underlying Conditions\t:";
-    //Blood Group
-    cout << endl << "Contact Number\t\t\t:";
-    cout << endl << "Email Address\t\t\t:";
-    cout << endl << "Physical Address\t\t:";
-    cout << endl << "(Optional) Date of Last Donation:";
-    cout << endl << "Username\t\t\t:";
-    cout << endl << "Password\t\t\t:";
+    cout << endl << "First Name\t\t\t: "; getline(cin, donor.firstName);
+    cout << "Last Name\t\t\t: "; getline(cin, donor.lastName);
+    cout << "Date of Birth\t\t\t: "; getline(cin, donor.dob);
+    cout << "Nationality\t\t\t: "; getline(cin, donor.nationality);
+    cout << "Ethnicity\t\t\t: "; getline(cin, donor.ethnicity);
+    cout << "Gender\t\t\t\t: "; getline(cin, donor.gender);
+    cout << "Known Underlying Conditions\t: "; getline(cin, donor.underlyCond);
+    cout << "Please select your Blood Group\t:";
+    cout << endl << endl << "\t[1] A+/-\t[2] B+/-";
+    cout << endl << "\t[3] AB+/-\t[4] O+/-" << endl << endl; 
+BloodSelectAskAgain:
+    cout << "Blood Group: "; cin >> bloodSelect;
+    if (bloodSelect == "1") {
+        bloodSelect = "A";
+    }
+    else if (bloodSelect == "2") {
+        bloodSelect = "B";
+    }
+    else if (bloodSelect == "3") {
+        bloodSelect = "AB";
+    }
+    else if (bloodSelect == "4") {
+        bloodSelect = "O";
+    }
+    else {
+        cout << endl << "Please select a valid option" << endl;
+        goto BloodSelectAskAgain;
+    }
+    cin.ignore();
+    donor.bloodGroup = bloodSelect;
+    cout << endl << "Contact Number\t\t\t: "; getline(cin, donor.contactNum);
+    cout << "Email Address\t\t\t: "; getline(cin, donor.emailAddr);
+    cout << "Physical Address\t\t: "; getline(cin, donor.physAddr);
+    cout << "(Optional) Date of Last Donation: "; getline(cin, donor.lastDonation);
+    cout << "Username\t\t\t: "; getline(cin, donor.username);
+    cout << "Password\t\t\t: "; getline(cin, donor.password);
     cout << endl << endl;
+    cout << "Thanks for Registering!" << endl;
+    cout << endl << "Returning to Menu..." << endl;
+    
 }
 
 void donorLoginFunc() {
@@ -164,13 +224,13 @@ RegisterRestart:
         if (regChoice == "1") {
             
             donorRegFunc();
-            system("pause");
+            //system("pause");
             goto MenuRestart;
         }
         else if (regChoice == "2") {
             
             recipientRegFunc();
-            system("pause");
+            //system("pause");
             goto MenuRestart;
         }
         else if (regChoice == "3") {
@@ -185,6 +245,7 @@ RegisterRestart:
     else if (menuInput == "5") {
         cout << endl << "Exiting..." << endl;
         exit(1);
+        
     }
     else {
         cout << endl << "Please select a valid option" << endl;
@@ -196,8 +257,7 @@ RegisterRestart:
 
 int main()
 {
-    read_a_csv();
-
-    //menuFunc();
+    //read_a_csv();
+    menuFunc();
 }
 
