@@ -2,37 +2,52 @@
 // Introduction Screen
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include "read_a_file_test.h"
 using namespace std;
 
+string rNameTemp, rPAddTemp, rEAddTemp, rNumTemp, rUNameTemp, rPWordTemp;
+string dFNameTemp, dLNameTemp, dDOBTemp, dNatTemp, dEthnicTemp, dGenderTemp, dUndCondTemp, dBloodTemp, dNumTemp, dEAddTemp, dPAddTemp, dLastDonateTemp, dUnameTemp, dPwordTemp;
+string recipientFilePath = "C:/Users/jacob/OneDrive/Documents/GitHub/Blood-Bank-System/NZ Blood Bank System/NZ Blood Bank System/RecipientInfo.csv";
+string donorFilePath = "C:/Users/jacob/OneDrive/Documents/GitHub/Blood-Bank-System/NZ Blood Bank System/NZ Blood Bank System/DonorInfo.csv";
+fstream file1, file2;
+
+
+
 // Struct to hold Donor Information and eventually transfer it to the CSV file
 struct donorInfo {
-    string firstName;
-    string lastName;
-    string dob;
-    string nationality;
-    string ethnicity;
-    string gender;
-    string underlyCond;
-    string bloodGroup;
-    string contactNum;
-    string emailAddr;
-    string physAddr;
-    string lastDonation = "";
-    string username;
-    string password;
+    string firstName = dFNameTemp;
+    string lastName = dLNameTemp;
+    string dob = dDOBTemp;
+    string nationality = dNatTemp;
+    string ethnicity = dEthnicTemp;
+    string gender = dGenderTemp;
+    string underlyCond = dUndCondTemp;
+    string bloodGroup = dBloodTemp;
+    string contactNum = dNumTemp;
+    string emailAddr = dEAddTemp;
+    string physAddr = dPAddTemp;
+    string lastDonation = dLastDonateTemp;
+    string username = dUnameTemp;
+    string password = dPwordTemp;
+
+    void donorRegFunc();
 };
 
 // Struct to hold Recipient Information and eventually transfer it to the CSV file
 struct recipientInfo {
-    string recipientName;
-    string physAddr;
-    string emailAddr;
-    string contactNum;
-    string username;
-    string password;
+    string recipientName = rNameTemp;
+    string physAddr = rPAddTemp;
+    string emailAddr = rEAddTemp;
+    string contactNum = rNumTemp;
+    string username = rUNameTemp;
+    string password = rPWordTemp;
 };
+
+void recipientWriteFunc();
+void donorWriteFunc();
+
  //Simple Function to write a line of variable length, with any character
 void lineFunc(int length, string type) {
     for (int i = 0; i < length; i++)
@@ -42,19 +57,26 @@ void lineFunc(int length, string type) {
 //Recipient Registration Function
 void recipientRegFunc() {           
     struct recipientInfo recipient;     //Declares the relevant struct in the function to be able to fill struct with data
+    string rStreet, rSuburb, rCity, rCountry;
     cout << endl << endl;
     cout << "\tRecipient Registration" << endl;
     lineFunc(38, "*");
     cout << endl << "Register an account as a Blood Recipient" << endl << endl;
     cin.ignore();
     cout << "Please input your information: ";  //Takes user input and adds to struct
-    cout << endl << "Full Recipient Name\t: "; getline(cin, recipient.recipientName);
-    cout << "Physical Address\t: "; getline(cin, recipient.physAddr);
-    cout << "Email Address\t\t: "; getline(cin, recipient.emailAddr);
-    cout << "Contact Number\t\t: "; getline(cin, recipient.contactNum);
-    cout << "Username\t\t: "; getline(cin, recipient.username);
-    cout << "Password\t\t: "; getline(cin, recipient.password);
+    cout << endl << "Full Recipient Name\t: "; getline(cin, rNameTemp);
+    cout << "Physical Address\t\t:";
+    cout << endl << "\t(Street)\t\t: "; getline(cin, rStreet); //dPAddTemp
+    cout << "\t(Suburb)\t\t: "; getline(cin, rSuburb);
+    cout << "\t(City)\t\t\t: "; getline(cin, rCity);
+    cout << "\t(Country)\t\t: "; getline(cin, rCountry);
+    rPAddTemp = rStreet + "/" + rSuburb + "/" + rCity + "/" + rCountry;
+    cout << "Email Address\t\t: "; getline(cin, rEAddTemp);
+    cout << "Contact Number\t\t: "; getline(cin, rNumTemp);
+    cout << "Username\t\t: "; getline(cin, rUNameTemp);
+    cout << "Password\t\t: "; getline(cin, rPWordTemp);
     cout << endl << endl;
+    recipientWriteFunc();
     cout << "Thanks for Registering!" << endl;
     cout << endl << "Returning to Menu..." << endl;
 }
@@ -70,23 +92,23 @@ void recipientLoginFunc() {           //TODO check that the username and passwor
 }
 
 
-void donorRegFunc() {               //Styled to have inputs all start on the same column
+void donorInfo::donorRegFunc() {               //Styled to have inputs all start on the same column
     struct donorInfo donor;
 
-    string bloodSelect;
+    string bloodSelect, dStreet, dSuburb, dCity, dCountry;
     cout << endl << endl;
     cout << "\tDonor Registration" << endl;
     lineFunc(34,"*");
     cout << endl << "Register an account as a Blood Donor" << endl << endl;
     cin.ignore();
     cout << "Please input your information: ";
-    cout << endl << "First Name\t\t\t: "; getline(cin, donor.firstName);
-    cout << "Last Name\t\t\t: "; getline(cin, donor.lastName);
-    cout << "Date of Birth\t\t\t: "; getline(cin, donor.dob);
-    cout << "Nationality\t\t\t: "; getline(cin, donor.nationality);
-    cout << "Ethnicity\t\t\t: "; getline(cin, donor.ethnicity);
-    cout << "Gender\t\t\t\t: "; getline(cin, donor.gender);
-    cout << "Known Underlying Conditions\t: "; getline(cin, donor.underlyCond);
+    cout << endl << "First Name\t\t\t: "; getline(cin, dFNameTemp);
+    cout << "Last Name\t\t\t: "; getline(cin, dLNameTemp);
+    cout << "Date of Birth\t\t\t: "; getline(cin, dDOBTemp);
+    cout << "Nationality\t\t\t: "; getline(cin, dNatTemp);
+    cout << "Ethnicity\t\t\t: "; getline(cin, dEthnicTemp);
+    cout << "Gender\t\t\t\t: "; getline(cin, dGenderTemp);
+    cout << "Known Underlying Conditions\t: "; getline(cin, dUndCondTemp);
     cout << "Please select your Blood Group\t:";
     cout << endl << endl << "\t[1] A+/-\t[2] B+/-";
     cout << endl << "\t[3] AB+/-\t[4] O+/-" << endl << endl; 
@@ -109,14 +131,21 @@ BloodSelectAskAgain:
         goto BloodSelectAskAgain;
     }
     cin.ignore();
-    donor.bloodGroup = bloodSelect;
-    cout << endl << "Contact Number\t\t\t: "; getline(cin, donor.contactNum);
-    cout << "Email Address\t\t\t: "; getline(cin, donor.emailAddr);
-    cout << "Physical Address\t\t: "; getline(cin, donor.physAddr);
-    cout << "(Optional) Date of Last Donation: "; getline(cin, donor.lastDonation);
-    cout << "Username\t\t\t: "; getline(cin, donor.username);
-    cout << "Password\t\t\t: "; getline(cin, donor.password);
+    dBloodTemp = bloodSelect;
+    cout << endl << "Contact Number\t\t\t: "; getline(cin, dNumTemp);
+    cout << "Email Address\t\t\t: "; getline(cin, dEAddTemp);
+    cout << "Physical Address\t\t:";
+    cout << endl << "\t(Street)\t\t: "; getline(cin, dStreet); //dPAddTemp
+    cout << "\t(Suburb)\t\t: "; getline(cin, dSuburb);
+    cout << "\t(City)\t\t\t: "; getline(cin, dCity);
+    cout << "\t(Country)\t\t: "; getline(cin, dCountry);
+    dPAddTemp = dStreet + "/" + dSuburb + "/" + dCity + "/" + dCountry;
+    cout << "(Optional) Date of Last Donation: "; getline(cin, dLastDonateTemp);
+    cout << "Username\t\t\t: "; getline(cin, dUnameTemp);
+    cout << "Password\t\t\t: "; getline(cin, dPwordTemp);
     cout << endl << endl;
+    cout << dPAddTemp;
+    donorWriteFunc();
     cout << "Thanks for Registering!" << endl;
     cout << endl << "Returning to Menu..." << endl;
     
@@ -142,7 +171,43 @@ void adminLoginFunc() {
     cout << endl << endl;
 }
 
+void recipientWriteFunc() {
+
+    
+    file1.open(recipientFilePath, ios::app);
+    struct recipientInfo recipient;
+    file1 << recipient.recipientName << ",";
+    file1 << " " << recipient.physAddr << ",";
+    file1 << " " << recipient.emailAddr << ",";
+    file1 << " " << recipient.contactNum << ",";
+    file1 << " " << recipient.username << ",";
+    file1 << " " << recipient.password << "\n";
+    file1.close();
+}
+
+void donorWriteFunc() {
+    file2.open(donorFilePath, ios::app);
+    struct donorInfo donor;
+    file2 << donor.firstName << ",";
+    file2 << donor.lastName << ",";
+    file2 << donor.dob << ",";
+    file2 << donor.nationality << ",";
+    file2 << donor.ethnicity << ",";
+    file2 << donor.gender << ",";
+    file2 << donor.underlyCond << ",";
+    file2 << donor.bloodGroup << ",";
+    file2 << donor.contactNum << ",";
+    file2 << donor.emailAddr << ",";
+    file2 << donor.physAddr << ",";
+    file2 << donor.lastDonation << ",";
+    file2 << donor.username << ",";
+    file2 << donor.password << "\n";
+    file2.close();
+}
+
 void menuFunc() {
+    donorInfo donor;
+    recipientInfo recipient;
     string menuInput;
 MenuRestart:
     cout << endl << "\tWelcome to the NZ Blood Bank System!" << endl;
@@ -224,7 +289,7 @@ RegisterRestart:
         cout << endl << "Please select a valid option: "; cin >> regChoice;
         if (regChoice == "1") {
             
-            donorRegFunc();
+            donor.donorRegFunc();
             //system("pause");
             goto MenuRestart;
         }
@@ -258,6 +323,13 @@ RegisterRestart:
 
 int main()
 {
+    
+    //file1.open(recipientFilePath, ios::out);
+    //file1 << "Recipient Name,Physical Address,Email Address,Contact Number,Username,Password" << endl;
+    //file1.close();
+    //file2.open(donorFilePath, ios::out);
+    //file2 << "First Name,Last Name,Date of Birth,Nationality,Ethnicity,Gender,Underlying Conditions,Blood Group,Contact Number,Email Address,Physical Address,Date of Last Donation,Username,Password" << endl;
+    //file2.close();
     //read_a_csv();
     menuFunc();
 }
