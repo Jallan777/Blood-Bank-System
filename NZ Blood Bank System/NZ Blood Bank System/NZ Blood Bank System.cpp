@@ -4,13 +4,13 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "read_a_file_test.h"
+#include "read_a_file_test.h" //TODO rename this to something sensibile
 using namespace std;
 
 string rNameTemp, rPAddTemp, rEAddTemp, rNumTemp, rUNameTemp, rPWordTemp;
 string dFNameTemp, dLNameTemp, dDOBTemp, dNatTemp, dEthnicTemp, dGenderTemp, dUndCondTemp, dBloodTemp, dNumTemp, dEAddTemp, dPAddTemp, dLastDonateTemp, dUnameTemp, dPwordTemp;
-string recipientFilePath = "C:/Users/jacob/OneDrive/Documents/GitHub/Blood-Bank-System/NZ Blood Bank System/NZ Blood Bank System/RecipientInfo.csv";
-string donorFilePath = "C:/Users/jacob/OneDrive/Documents/GitHub/Blood-Bank-System/NZ Blood Bank System/NZ Blood Bank System/DonorInfo.csv";
+string recipientFilePath = "C:\\Users\\ainsley2\\Desktop\\ainsley josh folder\\NZ Blood Bank System\\NZ Blood Bank System\\RecipientInfo.csv";
+string donorFilePath = "C:\\Users\\ainsley2\\Desktop\\ainsley josh folder\\NZ Blood Bank System\\NZ Blood Bank System\\DonorInfo.csv";
 fstream file1, file2;
 
 
@@ -81,14 +81,81 @@ void recipientRegFunc() {
     cout << endl << "Returning to Menu..." << endl;
 }
 
-void recipientLoginFunc() {           //TODO check that the username and password exist and are correct - exception handle if not
+bool recip_username_exists(string userName) { // TODO
+
+    // username exists = false
+    //  open file
+    // for each line in file
+        // check relevent colum in this line
+        // if this line matches
+            //username exists = true
+            // stop looping
+        // else 
+            //keep looping
+
+
+
+}
+
+
+void recipientLoginFunc() {           
+    
+    //TODO check that the username and password exist and are correct - exception handle if not
+    //TODO figure out how to not make an infinite ask for password loop
+
+
+    //formatting
     cout << endl << endl;
     cout << "\tRecipient Login" << endl;
     lineFunc(31, "*");
     cout << endl << "Log In as a Blood Recipient" << endl << endl;
-    cout << endl << "\tUsername: ";
-    cout << endl << "\tPassword: ";
-    cout << endl << endl;
+
+    // ask for username
+    string temp_user;
+    cout << endl << "\tUsername: "; getline(cin, temp_user);
+    
+    // check username exists in the csv by calling recip_username_exists()
+    bool username_exists = recip_username_exists(temp_user);
+    
+    
+    if (username_exists) {
+
+        //load recip into a struct TODO
+        
+  
+        // ask for the password 
+        string temp_pass;
+        cout << endl << "\tPassword: "; getline(cin, temp_pass);
+        cout << endl << endl;
+        
+        // check that it applies to this user name TODO
+        
+        if (applies) {
+
+            // log the user in as recipient ( maybe toggle a bool) TODO
+            
+            
+            //return out of recipientLoginFunc TODO
+        }
+        else {
+
+            // tell user invalid password! 
+            cout << endl << "\tInValid Password!, please try again ";
+            
+            
+            //goto ask for password TODO
+        }
+    }   
+
+    else {
+        //tell user "username" isnt registered! 
+        cout << endl << "\tThe username " <<  temp_user  << " is not registered as a recipient!";
+        
+        
+        //return out of recipientLoginFunc //TODO
+
+    }
+    
 }
 
 
@@ -151,7 +218,7 @@ BloodSelectAskAgain:
     
 }
 
-void donorLoginFunc() {
+void donorLoginFunc() { //TODO use very similar logic to recipientLoginFunc
     cout << endl << endl;
     cout << "\tDonor Login" << endl;
     lineFunc(28, "*");
@@ -161,7 +228,7 @@ void donorLoginFunc() {
     cout << endl << endl;
 }
 
-void adminLoginFunc() {
+void adminLoginFunc() { //TODO use very similar logic to recipientLoginFunc
     cout << endl << endl;
     cout << "\tAdministrator Login" << endl;
     lineFunc(35, "*");
