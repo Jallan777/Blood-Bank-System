@@ -196,8 +196,8 @@ RegisterRestart:
 
 int main()
 {
-    read_a_csv();
+    //read_a_csv();
 
-    //menuFunc();
+    menuFunc();
 }
 
