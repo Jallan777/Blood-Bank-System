@@ -1,6 +1,5 @@
 // NZ Blood Bank System.cpp : This file contains the 'main' function. Program execution begins and ends there.
 // Introduction Screen
-// Ainsley wrote this
 
 #include <iostream>
 #include <string>
@@ -60,7 +59,7 @@ void recipientRegFunc() {
     cout << endl << "Returning to Menu..." << endl;
 }
 
-void recipientLoginFunc() {
+void recipientLoginFunc() {           //TODO check that the username and password exist and are correct - exception handle if not
     cout << endl << endl;
     cout << "\tRecipient Login" << endl;
     lineFunc(31, "*");
