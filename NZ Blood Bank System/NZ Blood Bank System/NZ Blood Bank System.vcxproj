@@ -143,7 +143,7 @@
     <ClCompile Include="read_a_file_test.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="read_a_file_test.h" />
+    <ClInclude Include="Global functions.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Patient info.csv" />

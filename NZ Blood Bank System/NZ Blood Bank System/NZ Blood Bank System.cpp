@@ -4,7 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "read_a_file_test.h" //TODO rename this to something sensibile
+#include "Global funtions.h" //TODO rename this to something sensibile
 using namespace std;
 
 string rNameTemp, rPAddTemp, rEAddTemp, rNumTemp, rUNameTemp, rPWordTemp;
@@ -84,7 +84,9 @@ void recipientRegFunc() {
 bool recip_username_exists(string userName) { // TODO
 
     // username exists = false
-    //  open file
+    bool userExists = false;
+    
+    string filePath = "C:\\Users\\ainsley2\\Desktop\\ainsley josh folder\\NZ Blood Bank System\\NZ Blood Bank System\\Patient info.csv";
     // for each line in file
         // check relevent colum in this line
         // if this line matches
