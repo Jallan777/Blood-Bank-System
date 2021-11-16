@@ -4,13 +4,14 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "Global funtions.h" //TODO rename this to something sensibile
+#include "Global functions.h" 
 using namespace std;
 
+
 string rNameTemp, rPAddTemp, rEAddTemp, rNumTemp, rUNameTemp, rPWordTemp;
-string dFNameTemp, dLNameTemp, dDOBTemp, dNatTemp, dEthnicTemp, dGenderTemp, dUndCondTemp, dBloodTemp, dNumTemp, dEAddTemp, dPAddTemp, dLastDonateTemp, dUnameTemp, dPwordTemp;
-string recipientFilePath = "C:\\Users\\ainsley2\\Desktop\\ainsley josh folder\\NZ Blood Bank System\\NZ Blood Bank System\\RecipientInfo.csv";
-string donorFilePath = "C:\\Users\\ainsley2\\Desktop\\ainsley josh folder\\NZ Blood Bank System\\NZ Blood Bank System\\DonorInfo.csv";
+string dFNameTemp, dLNameTemp, dDOBTemp, dDOBDay, dDOBMonth, dDOBYear, dNatTemp, dEthnicTemp, dGenderTemp, dUndCondTemp, dBloodTemp, dNumTemp, dEAddTemp, dPAddTemp, dLastDonateTemp, dUnameTemp, dPwordTemp;
+string recipientFilePath = "RecipientInfo.csv";
+string donorFilePath = "DonorInfo.csv";
 fstream file1, file2;
 
 
@@ -65,11 +66,10 @@ void recipientRegFunc() {
     cin.ignore();
     cout << "Please input your information: ";  //Takes user input and adds to struct
     cout << endl << "Full Recipient Name\t: "; getline(cin, rNameTemp);
-    cout << "Physical Address\t\t:";
+    cout << "Physical Address";
     cout << endl << "\t(Street)\t\t: "; getline(cin, rStreet); //dPAddTemp
-    cout << "\t(Suburb)\t\t: "; getline(cin, rSuburb);
+    cout << "\t(Suburb/Town)\t\t: "; getline(cin, rSuburb);
     cout << "\t(City)\t\t\t: "; getline(cin, rCity);
-    cout << "\t(Country)\t\t: "; getline(cin, rCountry);
     rPAddTemp = rStreet + "/" + rSuburb + "/" + rCity + "/" + rCountry;
     cout << "Email Address\t\t: "; getline(cin, rEAddTemp);
     cout << "Contact Number\t\t: "; getline(cin, rNumTemp);
@@ -166,19 +166,27 @@ void donorInfo::donorRegFunc() {               //Styled to have inputs all start
 
     string bloodSelect, dStreet, dSuburb, dCity, dCountry;
     cout << endl << endl;
+
+    //Formatting
     cout << "\tDonor Registration" << endl;
     lineFunc(34,"*");
     cout << endl << "Register an account as a Blood Donor" << endl << endl;
     cin.ignore();
     cout << "Please input your information: ";
+
+    //Takes user input and stores in temp variable before moving into structure
     cout << endl << "First Name\t\t\t: "; getline(cin, dFNameTemp);
     cout << "Last Name\t\t\t: "; getline(cin, dLNameTemp);
-    cout << "Date of Birth\t\t\t: "; getline(cin, dDOBTemp);
+    cout << "Date of Birth\t\t\t(DD/MM/YYYY)";
+    cout << endl << "\t\t\tDay\t: "; getline(cin, dDOBDay); 
+    cout << "\t\t\tMonth\t: "; getline(cin, dDOBMonth); 
+    cout << "\t\t\tYear\t: "; getline(cin, dDOBYear);
+    dDOBTemp = dDOBDay + "/" + dDOBMonth + "/" + dDOBYear; //DOB split into different parts to try make sure the format is the same
     cout << "Nationality\t\t\t: "; getline(cin, dNatTemp);
     cout << "Ethnicity\t\t\t: "; getline(cin, dEthnicTemp);
     cout << "Gender\t\t\t\t: "; getline(cin, dGenderTemp);
     cout << "Known Underlying Conditions\t: "; getline(cin, dUndCondTemp);
-    cout << "Please select your Blood Group\t:";
+    cout << "Please select your Blood Group\t:";            //Asks user to select their blood group from a list of selections
     cout << endl << endl << "\t[1] A+/-\t[2] B+/-";
     cout << endl << "\t[3] AB+/-\t[4] O+/-" << endl << endl; 
 BloodSelectAskAgain:
@@ -203,17 +211,19 @@ BloodSelectAskAgain:
     dBloodTemp = bloodSelect;
     cout << endl << "Contact Number\t\t\t: "; getline(cin, dNumTemp);
     cout << "Email Address\t\t\t: "; getline(cin, dEAddTemp);
-    cout << "Physical Address\t\t:";
-    cout << endl << "\t(Street)\t\t: "; getline(cin, dStreet); //dPAddTemp
-    cout << "\t(Suburb)\t\t: "; getline(cin, dSuburb);
+    cout << "Physical Address\t\t:";                                        //Breaks down address into parts, so user doesn't try to use comma's to seperate values
+    cout << endl << "\t(Street)\t\t: "; getline(cin, dStreet);
+    cout << "\t(Suburb/Town)\t\t: "; getline(cin, dSuburb);
     cout << "\t(City)\t\t\t: "; getline(cin, dCity);
-    cout << "\t(Country)\t\t: "; getline(cin, dCountry);
-    dPAddTemp = dStreet + "/" + dSuburb + "/" + dCity + "/" + dCountry;
-    cout << "(Optional) Date of Last Donation: "; getline(cin, dLastDonateTemp);
+    dPAddTemp = dStreet + "/" + dSuburb + "/" + dCity + "/" + dCountry;     //Address parts combined into one string
+    cout << "Date of Last Donation" << endl; 
+    cout << "(Press Enter if Unknown)\t: "; getline(cin, dLastDonateTemp);
+    if (dLastDonateTemp == "") {                                            //If statement allows user to press enter and move past this question, and fills data with "unknown"
+        dLastDonateTemp = "Unknown";
+    }
     cout << "Username\t\t\t: "; getline(cin, dUnameTemp);
     cout << "Password\t\t\t: "; getline(cin, dPwordTemp);
     cout << endl << endl;
-    cout << dPAddTemp;
     donorWriteFunc();
     cout << "Thanks for Registering!" << endl;
     cout << endl << "Returning to Menu..." << endl;
