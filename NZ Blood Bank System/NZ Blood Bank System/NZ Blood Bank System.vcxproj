@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="LoggedInScreens(Temp).cpp" />
     <ClCompile Include="NZ Blood Bank System.cpp" />
     <ClCompile Include="read_a_file_test.cpp" />
   </ItemGroup>

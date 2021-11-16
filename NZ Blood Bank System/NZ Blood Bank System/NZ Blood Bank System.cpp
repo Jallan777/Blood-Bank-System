@@ -49,7 +49,7 @@ struct recipientInfo {
 void recipientWriteFunc();
 void donorWriteFunc();
 
- //Simple Function to write a line of variable length, with any character
+//Simple Function to write a line of variable length, with any character
 void lineFunc(int length, string type) {
     for (int i = 0; i < length; i++)
         cout << type;
@@ -65,16 +65,16 @@ void recipientRegFunc() {
     cout << endl << "Register an account as a Blood Recipient" << endl << endl;
     cin.ignore();
     cout << "Please input your information: ";  //Takes user input and adds to struct
-    cout << endl << "Full Recipient Name\t: "; getline(cin, rNameTemp);
+R1:    cout << endl << "Full Recipient Name\t: "; getline(cin, rNameTemp); if (rNameTemp == "" || rNameTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R1; }
     cout << "Physical Address";
-    cout << endl << "\t(Street)\t\t: "; getline(cin, rStreet); //dPAddTemp
-    cout << "\t(Suburb/Town)\t\t: "; getline(cin, rSuburb);
-    cout << "\t(City)\t\t\t: "; getline(cin, rCity);
+R2:    cout << endl << "\t(Street)\t\t: "; getline(cin, rStreet); if (rStreet == "" || rStreet == " ") { cout << endl << "Text Field is Empty!" << endl; goto R2; }
+R3:    cout << "\t(Suburb/Town)\t\t: "; getline(cin, rSuburb); if (rSuburb == "" || rSuburb == " ") { cout << endl << "Text Field is Empty!" << endl; goto R3; }
+R4:    cout << "\t(City)\t\t\t: "; getline(cin, rCity); if (rCity == "" || rCity == " ") { cout << endl << "Text Field is Empty!" << endl; goto R4; }
     rPAddTemp = rStreet + "/" + rSuburb + "/" + rCity + "/" + rCountry;
-    cout << "Email Address\t\t: "; getline(cin, rEAddTemp);
-    cout << "Contact Number\t\t: "; getline(cin, rNumTemp);
-    cout << "Username\t\t: "; getline(cin, rUNameTemp);
-    cout << "Password\t\t: "; getline(cin, rPWordTemp);
+R5:    cout << "Email Address\t\t: "; getline(cin, rEAddTemp); if (rEAddTemp == "" || rEAddTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R5; }
+R6:    cout << "Contact Number\t\t: "; getline(cin, rNumTemp); if (rNumTemp == "" || rNumTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R6; }
+R7:    cout << "Username\t\t: "; getline(cin, rUNameTemp); if (rUNameTemp == "" || rUNameTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R7; }
+R8:    cout << "Password\t\t: "; getline(cin, rPWordTemp); if (rPWordTemp == "" || rPWordTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R8; }
     cout << endl << endl;
     recipientWriteFunc();
     cout << "Thanks for Registering!" << endl;
@@ -125,8 +125,9 @@ void recipientLoginFunc() {
         //load recip into a struct TODO
         
   
-        // ask for the password 
+    PassReAsk: 
         string temp_pass;
+        int loginCounter = 0;
         cout << endl << "\tPassword: "; getline(cin, temp_pass);
         cout << endl << endl;
         
@@ -140,12 +141,17 @@ void recipientLoginFunc() {
             //return out of recipientLoginFunc TODO
         }
         else {
+            if (loginCounter <= 3) {
+                cout << endl << "\tToo Many Login Attempts" << endl << endl << "Returning to Menu...";
+                menuFunc();
+            }
+            else {
+                // tell user invalid password! 
+                cout << endl << "\tInvalid Password!, please try again ";
+                loginCounter++;
+                goto PassReAsk;
+            }
 
-            // tell user invalid password! 
-            cout << endl << "\tInValid Password!, please try again ";
-            
-            
-            //goto ask for password TODO
         }
     }   
 
@@ -175,17 +181,17 @@ void donorInfo::donorRegFunc() {               //Styled to have inputs all start
     cout << "Please input your information: ";
 
     //Takes user input and stores in temp variable before moving into structure
-    cout << endl << "First Name\t\t\t: "; getline(cin, dFNameTemp);
-    cout << "Last Name\t\t\t: "; getline(cin, dLNameTemp);
+R1:    cout << endl << "First Name\t\t\t: "; getline(cin, dFNameTemp); if (dFNameTemp == "" || dFNameTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R1; }
+R2:    cout << "Last Name\t\t\t: "; getline(cin, dLNameTemp); if (dLNameTemp== "" || dLNameTemp== " ") { cout << endl << "Text Field is Empty!" << endl; goto R2; }
     cout << "Date of Birth\t\t\t(DD/MM/YYYY)";
-    cout << endl << "\t\t\tDay\t: "; getline(cin, dDOBDay); 
-    cout << "\t\t\tMonth\t: "; getline(cin, dDOBMonth); 
-    cout << "\t\t\tYear\t: "; getline(cin, dDOBYear);
-    dDOBTemp = dDOBDay + "/" + dDOBMonth + "/" + dDOBYear; //DOB split into different parts to try make sure the format is the same
-    cout << "Nationality\t\t\t: "; getline(cin, dNatTemp);
-    cout << "Ethnicity\t\t\t: "; getline(cin, dEthnicTemp);
-    cout << "Gender\t\t\t\t: "; getline(cin, dGenderTemp);
-    cout << "Known Underlying Conditions\t: "; getline(cin, dUndCondTemp);
+R3:    cout << endl << "\t\t\tDay\t: "; getline(cin, dDOBDay); if (dDOBDay == "" || dDOBDay == " ") { cout << endl << "Text Field is Empty!" << endl; goto R3; }
+R4:    cout << "\t\t\tMonth\t: "; getline(cin, dDOBMonth); if (dDOBMonth == "" || dDOBMonth == " ") { cout << endl << "Text Field is Empty!" << endl; goto R4; }
+R5:    cout << "\t\t\tYear\t: "; getline(cin, dDOBYear); if (dDOBYear == "" || dDOBYear == " ") { cout << endl << "Please input Year" << endl; goto R5; }
+    dDOBTemp = dDOBDay + "/" + dDOBMonth + "/" + dDOBYear; //DOB split into different parts to try make sure the format is the same when put into struct
+R6:    cout << "Nationality\t\t\t: "; getline(cin, dNatTemp); if (dNatTemp == "" || dNatTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R6; }
+R7:    cout << "Ethnicity\t\t\t: "; getline(cin, dEthnicTemp); if ( dEthnicTemp == "" || dEthnicTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R7; }
+R8:    cout << "Gender\t\t\t\t: "; getline(cin, dGenderTemp); if ( dGenderTemp == "" || dGenderTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R8; }
+R9:    cout << "Known Underlying Conditions\t: "; getline(cin, dUndCondTemp); if ( dUndCondTemp == "" || dUndCondTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R9; }
     cout << "Please select your Blood Group\t:";            //Asks user to select their blood group from a list of selections
     cout << endl << endl << "\t[1] A+/-\t[2] B+/-";
     cout << endl << "\t[3] AB+/-\t[4] O+/-" << endl << endl; 
@@ -209,20 +215,20 @@ BloodSelectAskAgain:
     }
     cin.ignore();
     dBloodTemp = bloodSelect;
-    cout << endl << "Contact Number\t\t\t: "; getline(cin, dNumTemp);
-    cout << "Email Address\t\t\t: "; getline(cin, dEAddTemp);
+R10:    cout << endl << "Contact Number\t\t\t: "; getline(cin, dNumTemp); if ( dNumTemp == "" || dNumTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R10; }
+R11:    cout << "Email Address\t\t\t: "; getline(cin, dEAddTemp); if ( dEAddTemp == "" || dEAddTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R11; }
     cout << "Physical Address\t\t:";                                        //Breaks down address into parts, so user doesn't try to use comma's to seperate values
-    cout << endl << "\t(Street)\t\t: "; getline(cin, dStreet);
-    cout << "\t(Suburb/Town)\t\t: "; getline(cin, dSuburb);
-    cout << "\t(City)\t\t\t: "; getline(cin, dCity);
+R12:    cout << endl << "\t(Street)\t\t: "; getline(cin, dStreet); if ( dStreet == "" || dStreet == " ") { cout << endl << "Text Field is Empty!" << endl; goto R12; }
+R13:    cout << "\t(Suburb/Town)\t\t: "; getline(cin, dSuburb); if ( dSuburb == "" || dSuburb == " ") { cout << endl << "Text Field is Empty!" << endl; goto R13; }
+R14:    cout << "\t(City)\t\t\t: "; getline(cin, dCity); if ( dCity == "" || dCity == " ") { cout << endl << "Text Field is Empty!" << endl; goto R14; }
     dPAddTemp = dStreet + "/" + dSuburb + "/" + dCity + "/" + dCountry;     //Address parts combined into one string
     cout << "Date of Last Donation" << endl; 
     cout << "(Press Enter if Unknown)\t: "; getline(cin, dLastDonateTemp);
     if (dLastDonateTemp == "") {                                            //If statement allows user to press enter and move past this question, and fills data with "unknown"
         dLastDonateTemp = "Unknown";
     }
-    cout << "Username\t\t\t: "; getline(cin, dUnameTemp);
-    cout << "Password\t\t\t: "; getline(cin, dPwordTemp);
+R15:    cout << "Username\t\t\t: "; getline(cin, dUnameTemp); if ( dUnameTemp == "" || dUnameTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R15; }
+R16:    cout << "Password\t\t\t: "; getline(cin, dPwordTemp); if (dPwordTemp == "" || dPwordTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R16; }
     cout << endl << endl;
     donorWriteFunc();
     cout << "Thanks for Registering!" << endl;
@@ -369,13 +375,13 @@ RegisterRestart:
         if (regChoice == "1") {
             
             donor.donorRegFunc();
-            //system("pause");
+            
             goto MenuRestart;
         }
         else if (regChoice == "2") {
             
             recipientRegFunc();
-            //system("pause");
+            
             goto MenuRestart;
         }
         else if (regChoice == "3") {
@@ -391,6 +397,12 @@ RegisterRestart:
         cout << endl << "Exiting..." << endl;
         exit(1);
         
+    }
+    else if (menuInput == "6") {
+        donorFrontPage();
+    }
+    else if (menuInput == "7") {
+        recipFrontPage();
     }
     else {
         cout << endl << "Please select a valid option" << endl;
@@ -410,6 +422,8 @@ int main()
     //file2 << "First Name,Last Name,Date of Birth,Nationality,Ethnicity,Gender,Underlying Conditions,Blood Group,Contact Number,Email Address,Physical Address,Date of Last Donation,Username,Password" << endl;
     //file2.close();
     //read_a_csv();
+    
+    
     menuFunc();
 }
 

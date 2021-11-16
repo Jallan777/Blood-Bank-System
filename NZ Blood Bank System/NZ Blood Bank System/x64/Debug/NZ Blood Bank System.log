@@ -1,7 +1,2 @@
-﻿  NZ Blood Bank System.cpp
-C:\Users\jacob\OneDrive\Documents\GitHub\Blood-Bank-System\NZ Blood Bank System\NZ Blood Bank System\Global functions.h(5,28): error C2065: 'string': undeclared identifier
-C:\Users\jacob\OneDrive\Documents\GitHub\Blood-Bank-System\NZ Blood Bank System\NZ Blood Bank System\Global functions.h(5,35): error C2146: syntax error: missing ')' before identifier 'userName'
-C:\Users\jacob\OneDrive\Documents\GitHub\Blood-Bank-System\NZ Blood Bank System\NZ Blood Bank System\NZ Blood Bank System.cpp(84,6): error C2365: 'recip_username_exists': redefinition; previous definition was 'data variable'
-C:\Users\jacob\OneDrive\Documents\GitHub\Blood-Bank-System\NZ Blood Bank System\NZ Blood Bank System\Global functions.h(5): message : see declaration of 'recip_username_exists'
-C:\Users\jacob\OneDrive\Documents\GitHub\Blood-Bank-System\NZ Blood Bank System\NZ Blood Bank System\NZ Blood Bank System.cpp(120,28): error C2064: term does not evaluate to a function taking 1 arguments
-C:\Users\jacob\OneDrive\Documents\GitHub\Blood-Bank-System\NZ Blood Bank System\NZ Blood Bank System\NZ Blood Bank System.cpp(135,13): error C2065: 'applies': undeclared identifier
+﻿  LoggedInScreens(Temp).cpp
+  NZ Blood Bank System.vcxproj -> C:\Users\jacob\OneDrive\Documents\GitHub\Blood-Bank-System\NZ Blood Bank System\x64\Debug\NZ Blood Bank System.exe
