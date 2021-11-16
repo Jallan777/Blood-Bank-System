@@ -16,13 +16,13 @@ void donorFrontPage() {             //Landing page after Donor has logged in
     string moreInfo, moreInfo2;     
     string donorMenuChoice;
     //Formatting
-	cout << endl << "\tWelcome [NAME]" << endl;
+	cout << endl << "\tWelcome [NAME]" << endl;     //TODO get Name of donor from csv and display
     variableLineFunc(30, "*");
     cout << endl << endl;
     cout << "[1] Blood Donation Procedure" << endl;
     cout << "[2] Benefits of Donating Blood" << endl;
     cout << "[3] Manage my Account" << endl << endl;
-    cout << "[4] Return to Menu" << endl << endl;
+    cout << "[4] Logout & Return to Menu" << endl << endl;
     cout << "Please Select an Option: "; getline(cin, donorMenuChoice);
     //Take user input to navigate menu
     if (donorMenuChoice == "1") {
@@ -139,6 +139,7 @@ void donorFrontPage() {             //Landing page after Donor has logged in
         }
         else if (dManageChoice == "2") {
             //TODO Edit Info - needs to access file, display current details for user and provide option to change details
+            //-needs working find in csv func 
         }
         else if (dManageChoice == "3") {
             cin.ignore();
@@ -150,15 +151,56 @@ void donorFrontPage() {             //Landing page after Donor has logged in
         }
     }
     else if (donorMenuChoice == "4") {
-        menuFunc();
+    cout << endl << "Logging out..." << endl;
+    menuFunc();
     }
+    else {
+    cout << endl << "Please Input a Valid Option" << endl;      //Exception handling for user input
+    cin.ignore();
+    donorFrontPage();
+}
 
 }
 
 void recipFrontPage() {
+    string recipMenuChoice;
     //TODO menu with options to:
-    //-see donor info by blood group
-    //-access donors by location and blood group
-    //-find potential donor contact details by giving full name
+    //-see donor info by blood group (read csv and find n amount of people based if blood group the same)
+    //-access donors by location and blood group (same as above, but including location too)
+    //-find potential donor contact details by giving full name (again, look for specific name in csv and display corresponding details)
+
+    //Formatting
+    cout << endl << "\tWelcome [NAME]" << endl;     //TODO get Name of recipient from csv and display
+    variableLineFunc(30, "*");
+    cout << endl << endl;
+    cout << "[1] See Donor Info by Blood Group" << endl;
+    cout << "[2] See Donor Info by Location & Blood Group" << endl;
+    cout << "[3] Donor Name Search" << endl << endl;
+    cout << "[4] Logout & Return to Menu" << endl << endl;
+    cout << "Please Select an Option: "; getline(cin, recipMenuChoice);
+    if (recipMenuChoice == "1") { 
+        //See donors by blood group TODO
+        // -needs csv searcher
+        cout << endl << "Donors by Blood Type";
+    }
+    else if (recipMenuChoice == "2") {
+        //See donors by location and blood group TODO
+        // -needs csv searcher
+        cout << endl << "Donors by Location & Blood Type";
+    }
+    else if (recipMenuChoice == "3") {
+        //search donors Full Name and recieve contact details for that donor TODO
+        // -needs csv searcher
+        cout << endl << "Search Donors by Full Name";
+    }
+    else if (recipMenuChoice == "4") {
+        cout << endl << "Logging out..." << endl;
+        menuFunc();
+    }
+    else {
+        cout << endl << "Please Input a Valid Option" << endl;      //Exception handling for user input
+        cin.ignore();
+        recipFrontPage();
+    }
 }
 
