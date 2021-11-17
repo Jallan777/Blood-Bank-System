@@ -18,9 +18,6 @@
     <ClCompile Include="NZ Blood Bank System.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LoggedInScreens(Temp).cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global functions.h">
