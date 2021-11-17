@@ -511,19 +511,19 @@ void adminFrontPage() {
         }
     }
     else if(adminMenuChoice == "2") {
-    
+        //Update Donor Blood Test Reports
     }
     else if(adminMenuChoice == "3") { 
-    
+        //Donor Report
     }
     else if(adminMenuChoice == "4") { 
-    
+        //Recipient Report
     }
     else if(adminMenuChoice == "5") {
-    
+        //Location Based Report
     }
     else if (adminMenuChoice == "6") {
-    
+        //Location Based Report
     }
     else if (adminMenuChoice == "7") {
         cout << endl << "Logging out..." << endl;
