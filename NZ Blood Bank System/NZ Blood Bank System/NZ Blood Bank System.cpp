@@ -10,7 +10,7 @@
 using namespace std;
 
 
-string rNameTemp, rPAddTemp, rEAddTemp, rNumTemp, rUNameTemp, rPWordTemp;
+string rNameTemp, rPAddTemp, rEAddTemp, rNumTemp, rUNameTemp, rPWordTemp, recipValidTemp;
 string dFNameTemp, dLNameTemp, dDOBTemp, dDOBDay, dDOBMonth, dDOBYear, dNatTemp, dEthnicTemp, dGenderTemp, dUndCondTemp, dBloodTemp, dNumTemp, dEAddTemp, dPAddTemp, dLastDonateTemp, dUnameTemp, dPwordTemp;
 string recipientFilePath = "Patient info.csv"; // TODO MAKE SURE THIS IS RECIPIENT 
 string donorFilePath = "DonorInfo.csv";
@@ -75,6 +75,7 @@ struct recipientInfo {
     string contactNum = rNumTemp;
     string username = rUNameTemp;
     string password = rPWordTemp;
+    string validated = recipValidTemp;
 };
 
 void recipientWriteFunc();
@@ -105,7 +106,13 @@ R4:    cout << "\t(City)\t\t\t: "; getline(cin, rCity); if (rCity == "" || rCity
 R5:    cout << "Email Address\t\t: "; getline(cin, rEAddTemp); if (rEAddTemp == "" || rEAddTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R5; }
 R6:    cout << "Contact Number\t\t: "; getline(cin, rNumTemp); if (rNumTemp == "" || rNumTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R6; }
 R7:    cout << "Username\t\t: "; getline(cin, rUNameTemp); if (rUNameTemp == "" || rUNameTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R7; }
-R8:    cout << "Password\t\t: "; getline(cin, rPWordTemp); if (rPWordTemp == "" || rPWordTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R8; }
+R8:    cout << "Password\t\t: "; getline(cin, rPWordTemp); if (rPWordTemp == "" || rPWordTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R8; }           //(Below)Quickly checks fields aren't empty and triggers validation if all fields filled
+    if (rNameTemp == "" || rNameTemp == " " && rPAddTemp == "" || rPAddTemp == " " && rEAddTemp == "" || rEAddTemp == " " && rNumTemp == "" || rNumTemp == " " && rUNameTemp == "" || rUNameTemp == " " && rPWordTemp == "" || rPWordTemp == " ") {
+        recipValidTemp = "No";
+    }
+    else {
+        recipValidTemp = "Yes";
+    }
     cout << endl << endl;
     recipientWriteFunc();
     cout << "Thanks for Registering!" << endl;
@@ -278,10 +285,11 @@ void recipientWriteFunc() {
     struct recipientInfo recipient;
     file1 << recipient.recipientName << ",";
     file1 << " " << recipient.physAddr << ",";
-    file1 << " " << recipient.emailAddr << ",";
-    file1 << " " << recipient.contactNum << ",";
+    file1 << "| " << recipient.emailAddr << ",";
+    file1 << "| " << recipient.contactNum << ",";
     file1 << " " << recipient.username << ",";
-    file1 << " " << recipient.password << "\n";
+    file1 << " " << recipient.password << ",";
+    file1 << " " << recipient.validated << "\n";
     file1.close();
 }
 
