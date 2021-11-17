@@ -192,7 +192,7 @@ void recipFrontPage() {
         cout << "\tA" << endl << "\tB" << endl << "\tAB" << endl << "\tO" << endl;
         cout << "Please Select an Option: "; getline(cin, bloodOnlySearch);
         if (bloodOnlySearch == "A" || bloodOnlySearch == "a") {
-            bloodOnlySearch == "A";
+            bloodOnlySearch = "A";
             //Find any donors that match blood type, display their full name and blood group TODO
         }
         else if (bloodOnlySearch == "B" || bloodOnlySearch == "b") {
