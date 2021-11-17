@@ -22,7 +22,7 @@ fstream file;
 
 file.open(filePath, ios::in);
 
-string line;
+
 
 while (std::getline(file, line)){
 

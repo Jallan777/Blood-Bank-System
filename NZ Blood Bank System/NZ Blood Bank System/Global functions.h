@@ -5,5 +5,5 @@ void donorFrontPage();
 void recipFrontPage();
 void menuFunc();
 
-bool recip_username_exists(string userName);
+bool InfoExists(std::string target_info, std::string file_to_open, int where_to_look);
 
