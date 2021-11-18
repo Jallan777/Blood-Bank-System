@@ -13,6 +13,7 @@ string rNameTemp, rPAddTemp, rEAddTemp, rNumTemp, rUNameTemp, rPWordTemp, recipV
 string dFNameTemp, dLNameTemp, dDOBTemp, dDOBDay, dDOBMonth, dDOBYear, dNatTemp, dEthnicTemp, dGenderTemp, dUndCondTemp, dBloodTemp, dNumTemp, dEAddTemp, dPAddTemp, dLastDonateTemp, dUnameTemp, dPwordTemp;
 string recipientFilePath = "RecipientInfo.csv"; // TODO MAKE SURE THIS IS RECIPIENT 
 string donorFilePath = "DonorInfo.csv";
+string adminFilePath = "AdminInfo.csv";
 fstream file1, file2;
 
 
@@ -42,6 +43,11 @@ enum recip_data_type{
     recip_username,
     recip_password,
     recip_validated};
+
+enum admin_data_type {
+    admin_username,
+    admin_password
+};
 
 // Struct to hold Donor Information and eventually transfer it to the CSV file
 struct donorInfo {
@@ -101,60 +107,7 @@ vector<string> split(string s, string delimiter) {
     return res;
 }
 
-
-//Extract Donor Information from CSV File into struct
-//donorInfo Get_donor_info(int data_row_num, string file_to_open) { //TODO put a line from the csv into a struct and returning that struct
-//
-//    ifstream file;
-//    std::string line;
-//    bool isHeader = true;
-//    int row_counter = 0;
-//
-//    donorInfo info_to_return = {};
-//
-//    file.open(file_to_open, std::ios::in);
-//    while (std::getline(file, line)) {
-//        // this is the CSV header so skip it      
-//        if (isHeader) {
-//            isHeader = false;
-//            continue;
-//        }
-//        row_counter++; // make sure we are only looking at the desired row
-//
-//        if (data_row_num == row_counter) {
-//
-//
-//            // split the CSV line into an array
-//            // assign the values in the vector to the correct parts of the struct
-//            vector<string> values = split(line, ",");
-//            info_to_return.firstName = values[0];
-//            info_to_return.lastName = values[1];
-//            info_to_return.dob = values[2];
-//            info_to_return.nationality = values[3];
-//            info_to_return.ethnicity = values[4];
-//            info_to_return.gender = values[5];
-//            info_to_return.underlyCond = values[6];
-//            info_to_return.bloodGroup = values[7];
-//            info_to_return.contactNum = values[8];
-//            info_to_return.emailAddr = values[9];
-//            info_to_return.physAddr = values[10];
-//            info_to_return.lastDonation = values[11];
-//            info_to_return.username = values[12];
-//            info_to_return.password = values[13];
-//
-//            //close the file
-//            file.close();
-//
-//            //once its full with the info return it
-//            return info_to_return;
-//        }
-//
-//    } file.close();
-//    return info_to_return;
-//
-//
-//}
-
+//Get recipient info from csv and place into struct
 recipientInfo Get_recipient_info(int data_row_num, string file_to_open) {
 
     ifstream file;
@@ -199,7 +152,57 @@ recipientInfo Get_recipient_info(int data_row_num, string file_to_open) {
     return info_to_return;
 }
 
-//get_donor_info() TODO
+//Get Donor info from csv and place into struct
+donorInfo Get_donor_info(int data_row_num, string file_to_open) {
+
+    ifstream file;
+    std::string line;
+    bool isHeader = true;
+    int row_counter = 0;
+
+    donorInfo info_to_return = {};
+
+    file.open(file_to_open, std::ios::in);
+    while (std::getline(file, line)) {
+        // this is the CSV header so skip it      
+        if (isHeader) {
+            isHeader = false;
+            continue;
+        }
+        row_counter++; // make sure we are only looking at the desired row
+
+        if (data_row_num == row_counter) {
+
+
+            // split the CSV line into an array
+            // assign the values in the vector to the correct parts of the struct
+            vector<string> values = split(line, ",");
+
+
+
+            info_to_return.firstName = values[First_Name]; //cout << values[recipient_name];
+            info_to_return.lastName = values[last_name]; //cout << values[physAddr];
+            info_to_return.dob = values[DOB]; //cout << values[emailAddr];
+            info_to_return.nationality = values[nationality]; //cout << values[contactNum];
+            info_to_return.ethnicity = values[ethnicity]; //cout << values[recip_username];
+            info_to_return.gender = values[gender]; //cout << values[recip_password];
+            info_to_return.underlyCond = values[underlying_condition]; //cout << values[recip_validated];
+            info_to_return.bloodGroup = values[blood_group];
+            info_to_return.contactNum = values[contact_no];
+            info_to_return.emailAddr = values[email];
+            info_to_return.physAddr = values[physical_address];
+            info_to_return.lastDonation = values[last_date_of_donation];
+            info_to_return.username = values[donor_username];
+            info_to_return.password = values[donor_password];
+
+            file.close();
+            return info_to_return;
+        }
+
+    } file.close();
+
+    return info_to_return;
+}
 
 // get admin info() TODO
 
@@ -208,9 +211,10 @@ recipientInfo Get_recipient_info(int data_row_num, string file_to_open) {
 void donorFrontPage() {             //Landing page after Donor has logged in
     string moreInfo, moreInfo2;
     string donorMenuChoice;
+    donorInfo my_donor_info = Get_donor_info((lineFoundOn - 1), "DonorInfo.csv");
     //Formatting
-    cout << endl << "\tWelcome [NAME]" << endl;     //TODO get Name of donor from csv and display
-    lineFunc(30, "*");
+    cout << endl << "\tWelcome " << my_donor_info.firstName << endl;     //TODO get Name of donor from csv and display
+    lineFunc(40, "*");
     cout << endl << endl;
     cout << "[1] Blood Donation Procedure" << endl;
     cout << "[2] Benefits of Donating Blood" << endl;
@@ -371,14 +375,15 @@ void donorFrontPage() {             //Landing page after Donor has logged in
 //Recipient Post-Login Screen
 void recipFrontPage() {
     string recipMenuChoice, bloodOnlySearch, locationBloodSearch;
+    recipientInfo my_recipient_info = Get_recipient_info((lineFoundOn - 1), "Recipientinfo.csv");
     //TODO menu with options to:
     //-see donor info by blood group (read csv and find n amount of people based if blood group the same)
     //-access donors by location and blood group (same as above, but including location too)
     //-find potential donor contact details by giving full name (again, look for specific name in csv and display corresponding details)
-
+    
     //Formatting
-    cout << endl << "\tWelcome [NAME]" << endl;     //TODO get Name of recipient from csv and display
-    lineFunc(30, "*");
+    cout << endl << "\tWelcome " << my_recipient_info.recipientName << endl;     //TODO get Name of recipient from csv and display
+    lineFunc(40, "*");
     cout << endl << endl;
     cout << "[1] See Donors by Blood Group" << endl;
     cout << "[2] See Donors by Location & Blood Group" << endl;
@@ -389,25 +394,48 @@ void recipFrontPage() {
         //See donors by blood group TODO
         // -needs csv searcher
     BloodSearchRestart:
+        int onLine, lineCompare;
         cout << endl << "\tDonors by Blood Type" << endl;
         lineFunc(36, "*");
         cout << endl << "\tSelect Blood Group: " << endl << endl;
-        cout << "\t[1] Type A" << "\t[3]Type AB" << endl << "\t[2]Type B" << "\t [4]Type O" << endl << endl;
+        cout << "\t[1] Type A" << "\t[2]Type B" << endl << "\t[3]Type AB" << "\t [4]Type O" << endl << endl;
         cout << "Please Select an Option: "; getline(cin, bloodOnlySearch);
+        bool bloodTypeExists;
         if (bloodOnlySearch == "1") {
             bloodOnlySearch = "A";
-            //Find any donors that match blood type, display their full name and blood group TODO
+            bloodTypeExists = InfoExists(bloodOnlySearch, donorFilePath, blood_group);
+            if (bloodTypeExists) {
+                onLine = lineFoundOn - 1;
+                donorInfo my_donor_info = Get_donor_info(onLine++, "DonorInfo.csv");
+                if (my_donor_info.bloodGroup == bloodOnlySearch) {
+                    cout << endl;
+                    lineFunc(50, "*");
+                    cout << endl << endl;
+                    cout << "Donor Name\t: " << my_donor_info.firstName << " " << my_donor_info.lastName << endl;
+                    cout << "Blood Group\t: " << my_donor_info.bloodGroup << endl;
+                    cout << "Date of Birth\t: " << my_donor_info.dob << endl;
+                    cout << "Nationality\t: " << my_donor_info.nationality << endl;
+                    cout << "Ethnicity\t: " << my_donor_info.ethnicity << endl;
+                    cout << "Gender\t\t: " << my_donor_info.gender << endl;
+                    cout << "Known Underlying Conditions\t: " << my_donor_info.underlyCond << endl;
+                    cout << "Date of Last Donation\t\t: " << my_donor_info.lastDonation << endl;
+                }
+            }
+            
         }
         else if (bloodOnlySearch == "2") {
             bloodOnlySearch = "B";
+            bloodTypeExists = InfoExists(bloodOnlySearch, donorFilePath, blood_group);
             //Find any donors that match blood type, display their full name and blood group
         }
         else if (bloodOnlySearch == "3") {
-            bloodOnlySearch = "A";
+            bloodOnlySearch = "AB";
+            bloodTypeExists = InfoExists(bloodOnlySearch, donorFilePath, blood_group);
             //Find any donors that match blood type, display their full name and blood group
         }
         else if (bloodOnlySearch == "4") {
             bloodOnlySearch = "O";
+            bloodTypeExists = InfoExists(bloodOnlySearch, donorFilePath, blood_group);
             //Find any donors that match blood type, display their full name and blood group
         }
         else {
@@ -425,11 +453,67 @@ void recipFrontPage() {
         recipFrontPage();
     }
     else if (recipMenuChoice == "3") {
-        //search donors Full Name and recieve contact details for that donor TODO
-        // -needs csv searcher
+        string firstNameSearch, lastNameSearch, firstLine, secondLine;
         cout << endl << "Search Donors by Full Name" << endl;
-        cout << "Press Enter to Return" << endl; cin.ignore();
-        recipFrontPage();
+        lineFunc(30, "*");
+    DonorSearchAgain:
+        cout << endl << endl;
+        cout << "Please Enter Donor Full Name (Case Sensitive!): " << endl; 
+        cout << "\tFirst Name: "; cin >> firstNameSearch;
+        cout << "\tLast Name: "; cin >> lastNameSearch;
+        bool firstNameExists = InfoExists(firstNameSearch, donorFilePath, First_Name);
+        if (firstNameExists) {
+            firstLine = lineFoundOn;
+            bool lastNameExists = InfoExists(lastNameSearch, donorFilePath, last_name);
+            secondLine = lineFoundOn;
+            if (lastNameExists && firstLine == secondLine) {
+                donorInfo my_donor_info = Get_donor_info((lineFoundOn - 1), "DonorInfo.csv");
+                cout << endl;
+                lineFunc(50, "*");
+                cout << endl << endl;
+                cout << "Donor Name: " << my_donor_info.firstName << " " << my_donor_info.lastName << endl;
+                cout << "Contact Details:" << endl;
+                cout << "\tContact Number: " << my_donor_info.contactNum.erase(0,1) << endl;
+                cout << "\tEmail Address: " << my_donor_info.emailAddr << endl << endl;
+                lineFunc(50, "*");
+                cout << endl << endl;
+                string donorSearchAgain;
+            DonorSearchAgainAsk:
+                cout << "Would you like to search again? [Y]/[N]: "; cin >> donorSearchAgain;
+                if (donorSearchAgain == "Y" || donorSearchAgain == "y") {
+                    goto DonorSearchAgain;
+                }
+                else if (donorSearchAgain == "N" || donorSearchAgain == "n") {
+                    cin.ignore();
+                    cout << endl << "Returning to Recipient Menu..." << endl;
+                    recipFrontPage();
+                }
+                else {
+                    cout << endl << "Please Input a Valid Option" << endl;
+                    goto DonorSearchAgainAsk;
+                }
+            }
+        }
+        else {
+            //Tell user no donors are registered with this name
+            string noDonorRetry;
+            cout << endl << "No Donors are registered with this name!" << endl;
+        NoDonorRetryAsk:
+            cout << "Would you like to search again? [Y]/[N]: "; cin >> noDonorRetry;
+            if (noDonorRetry == "Y" || noDonorRetry == "y") {
+                goto DonorSearchAgain;
+            }
+            else if (noDonorRetry == "N" || noDonorRetry == "n") {
+                cin.ignore();
+                cout << endl << "Returning to Recipient Menu..." << endl;
+                recipFrontPage();
+            }
+            else {
+                cout << endl << "Please Input a Valid Option" << endl;
+                goto NoDonorRetryAsk;
+            }
+        }
+        
     }
     else if (recipMenuChoice == "4") {
         cout << endl << "Logging out..." << endl;
@@ -540,31 +624,28 @@ R8:    cout << "Password\t\t: "; getline(cin, rPWordTemp); if (rPWordTemp == "" 
 
 //Recipient Login Fucntion
 void recipientLoginFunc() {           
-    recipientInfo info_to_return;
-    //TODO check that the password exist and are correct - exception handle if not
-    //TODO figure out how to not make an infinite ask for password loop
+    
 
-
-    //formatting
+    //Formatting
     cout << endl << endl;
     cout << "\tRecipient Login" << endl;
     lineFunc(31, "*");
     cout << endl << "Log In as a Blood Recipient" << endl << endl;
 
-    // ask for username
+    //Ask for username
     string temp_user;
     
-    cout << endl << "\tUsername: "; getline(cin, temp_user); // TODO not prompting the user here
-    
-    // check username exists in the csv by calling InfoExists() with hardcoded index and file to open
+    cout << endl << "\tUsername: "; getline(cin, temp_user);
+
+    //Check username exists in the csv by calling InfoExists() with hardcoded index and file to open
     bool username_exists = InfoExists(temp_user, recipientFilePath, recip_username);
     
     
     if (username_exists) {
-        cout << "exists function is working";
-        int loginCounter = 0;
-        unameLine = lineFoundOn;
-        //load recip into a struct TODO
+        
+        int loginCounter = 1;
+        unameLine = lineFoundOn;        //Sets a variable to hold the number of the line the username was found on
+        
         
   
     PassReAsk: 
@@ -573,28 +654,27 @@ void recipientLoginFunc() {
         cout << endl << "\tPassword: "; getline(cin, temp_pass);
         cout << endl << endl;
         
-        // check that it applies to this user name TODO
+        //Check password exists by calling InfoExists()
         bool password_exists = InfoExists(temp_pass, recipientFilePath, recip_password);
-        pwordLine = lineFoundOn;
-        if (password_exists && unameLine == pwordLine) {// TODO applies
+        pwordLine = lineFoundOn;        //Sets a differernt variable to hold number of line password is on
+        if (password_exists && unameLine == pwordLine) {    //Makes sure password exists and is on the same line as the username, therefore meaning its the same account
 
-            cout << pwordLine << " " << unameLine;
-            cout << endl << "Press Enter to Log In"; cin.ignore(); //TODO  change the state of something to indicate logged in state
-            recipFrontPage();
+            
+            cout << endl << "Press Enter to Log In"; cin.ignore(); 
+            recipFrontPage();       //If username and password are both correct and match the info stored upon same line in csv, then proceed
             
             
-            //return out of recipientLoginFunc TODO
-            //return to recipFrontPage();
+
         }
         else {
-            if (loginCounter > 3) {
+            if (loginCounter > 3) {     //Tracks login attemps. Once attempted tries is more than 3, send user back to main menu
                 cout << endl << "\tToo Many Login Attempts" << endl << endl << "Returning to Menu...";
                 menuFunc();
             }
             else {
                 // tell user invalid password! 
                 cout << endl << "\tInvalid Password!, please try again ";
-                loginCounter++;
+                loginCounter++;         //Adds to login attempt tracker
                 goto PassReAsk;
             }
 
@@ -695,27 +775,161 @@ R16:    cout << "Password\t\t\t: "; getline(cin, dPwordTemp); if (dPwordTemp == 
 }
 
 //Donor Login Function
-void donorLoginFunc() { //TODO use very similar logic to recipientLoginFunc
+void donorLoginFunc() { 
+    //Formatting
     cout << endl << endl;
     cout << "\tDonor Login" << endl;
-    lineFunc(28, "*");
+    lineFunc(31, "*");
     cout << endl << "Log In as a Blood Donor" << endl << endl;
-    cout << endl << "\tUsername: ";
-    cout << endl << "\tPassword: ";
-    cout << endl << endl << "Press Enter to Log In"; cin.ignore();
-    donorFrontPage();
+
+    //Ask for username
+    string temp_user;
+
+    cout << endl << "\tUsername: "; getline(cin, temp_user);
+
+    //Check username exists in the csv by calling InfoExists() with hardcoded index and file to open
+    bool username_exists = InfoExists(temp_user, donorFilePath, donor_username);
+
+
+    if (username_exists) {
+
+        int loginCounter = 1;
+        unameLine = lineFoundOn;        //Sets a variable to hold the number of the line the username was found on
+
+
+
+    PassReAsk:
+        string temp_pass;
+
+        cout << endl << "\tPassword: "; getline(cin, temp_pass);
+        cout << endl << endl;
+
+        //Check password exists by calling InfoExists()
+        bool password_exists = InfoExists(temp_pass, donorFilePath, donor_password);
+        pwordLine = lineFoundOn;        //Sets a differernt variable to hold number of line password is on
+        if (password_exists && unameLine == pwordLine) {    //Makes sure password exists and is on the same line as the username, therefore meaning its the same account
+
+
+            cout << endl << "Press Enter to Log In"; cin.ignore();
+            donorFrontPage();       //If username and password are both correct and match the info stored upon same line in csv, then proceed
+
+
+
+        }
+        else {
+            if (loginCounter > 3) {     //Tracks login attemps. Once attempted tries is more than 3, send user back to main menu
+                cout << endl << "\tToo Many Login Attempts" << endl << endl << "Returning to Menu...";
+                menuFunc();
+            }
+            else {
+                // tell user invalid password! 
+                cout << endl << "\tInvalid Password!, please try again ";
+                loginCounter++;         //Adds to login attempt tracker
+                goto PassReAsk;
+            }
+
+        }
+    }
+    else {
+        //tell user "username" isnt registered! 
+        string dLoginRetry;
+        cout << endl << "\tThe username " << temp_user << " is not registered as a donor!" << endl;
+    rLoginRetryRestart:
+        cout << endl << "\tDid you want to try again? [Y]/[N]" << endl << "\t"; cin >> dLoginRetry;
+        cin.ignore();
+        if (dLoginRetry == "Y" || dLoginRetry == "y") {
+            donorLoginFunc();
+        }
+        else if (dLoginRetry == "N" || dLoginRetry == "n") {
+            cout << endl << "Returning to Menu..." << endl;
+            menuFunc();
+        }
+        else {
+            cout << endl << "Please Input a Valid Option" << endl;
+            goto rLoginRetryRestart;
+        }
+
+
+    }
 }
 
 //Admin Login Function
 void adminLoginFunc() { //TODO use very similar logic to recipientLoginFunc
+    //Formatting
     cout << endl << endl;
-    cout << "\tAdministrator Login" << endl;
-    lineFunc(35, "*");
-    cout << endl << "Log In as Administrator" << endl << endl;
-    cout << endl << "\tUsername: ";
-    cout << endl << "\tPassword: ";
-    cout << endl << endl << "Press Enter to Log In" << endl; cin.ignore();
-    adminFrontPage();
+    cout << "\tAdmin Login" << endl;
+    lineFunc(31, "*");
+    cout << endl << "Log In as Admin" << endl << endl;
+
+    //Ask for username
+    string temp_user;
+
+    cout << endl << "\tUsername: "; getline(cin, temp_user);
+
+    //Check username exists in the csv by calling InfoExists() with hardcoded index and file to open
+    bool username_exists = InfoExists(temp_user, adminFilePath, admin_username);
+
+
+    if (username_exists) {
+
+        int loginCounter = 1;
+        unameLine = lineFoundOn;        //Sets a variable to hold the number of the line the username was found on
+
+
+
+    PassReAsk:
+        string temp_pass;
+
+        cout << endl << "\tPassword: "; getline(cin, temp_pass);
+        cout << endl << endl;
+
+        //Check password exists by calling InfoExists()
+        bool password_exists = InfoExists(temp_pass, adminFilePath, admin_password);
+        pwordLine = lineFoundOn;        //Sets a differernt variable to hold number of line password is on
+        if (password_exists && unameLine == pwordLine) {    //Makes sure password exists and is on the same line as the username, therefore meaning its the same account
+
+
+            cout << endl << "Press Enter to Log In"; cin.ignore();
+            adminFrontPage();       //If username and password are both correct and match the info stored upon same line in csv, then proceed
+
+
+
+        }
+        else {
+            if (loginCounter > 3) {     //Tracks login attemps. Once attempted tries is more than 3, send user back to main menu
+                cout << endl << "\tToo Many Login Attempts" << endl << endl << "Returning to Menu...";
+                menuFunc();
+            }
+            else {
+                // tell user invalid password! 
+                cout << endl << "\tInvalid Password!, please try again ";
+                loginCounter++;         //Adds to login attempt tracker
+                goto PassReAsk;
+            }
+
+        }
+    }
+    else {
+        //tell user "username" isnt registered! 
+        string aLoginRetry;
+        cout << endl << "\tThe username " << temp_user << " is not registered!" << endl;
+    aLoginRetryRestart:
+        cout << endl << "\tDid you want to try again? [Y]/[N]" << endl << "\t"; cin >> aLoginRetry;
+        cin.ignore();
+        if (aLoginRetry == "Y" || aLoginRetry == "y") {
+            adminLoginFunc();
+        }
+        else if (aLoginRetry == "N" || aLoginRetry == "n") {
+            cout << endl << "Returning to Menu..." << endl;
+            menuFunc();
+        }
+        else {
+            cout << endl << "Please Input a Valid Option" << endl;
+            goto aLoginRetryRestart;
+        }
+
+
+    }
 
 }
 
@@ -929,11 +1143,11 @@ int main()
     //file2.close();
     //read_a_csv();
     
-    recipientInfo my_recipient_info = Get_recipient_info(1, "Recipientinfo.csv");
+    //recipientInfo my_recipient_info = Get_recipient_info(1, "Recipientinfo.csv");
 
-    cout << my_recipient_info.emailAddr;
+    //cout << my_recipient_info.recipientName << " and " << my_recipient_info.emailAddr;
 
     
-    //menuFunc();
+    menuFunc();
 }
 
