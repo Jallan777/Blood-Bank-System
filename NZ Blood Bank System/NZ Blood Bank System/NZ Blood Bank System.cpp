@@ -578,7 +578,7 @@ void recipientLoginFunc() {
         if (password_exists && unameLine == pwordLine) {// TODO applies
 
             cout << pwordLine << " " << unameLine;
-            cout << endl << "Press Enter to Log In"; cin.ignore();
+            cout << endl << "Press Enter to Log In"; cin.ignore(); //TODO  change the state of something to indicate logged in state
             recipFrontPage();
             
             
