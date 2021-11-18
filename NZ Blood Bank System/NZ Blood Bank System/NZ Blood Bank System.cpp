@@ -40,7 +40,8 @@ enum recip_data_type{
     emailAddr,
     contactNum,
     recip_username,
-    recip_password };
+    recip_password,
+    recip_validated};
 
 // Struct to hold Donor Information and eventually transfer it to the CSV file
 struct donorInfo {
@@ -178,16 +179,16 @@ recipientInfo Get_recipient_info(int data_row_num, string file_to_open) {
             // split the CSV line into an array
             // assign the values in the vector to the correct parts of the struct
             vector<string> values = split(line, ",");
-            string returnNameTemp = values[0], returnAddrTemp = values[1], returnEmailTemp = values[2], returnNumTemp = values[3], returnUserTemp = values[4], returnPassTemp = values[5], returnValidTemp = values[6];
+            
            
 
-            info_to_return.recipientName = returnNameTemp; 
-            info_to_return.physAddr = returnAddrTemp;
-            info_to_return.emailAddr = returnEmailTemp;
-            info_to_return.contactNum = returnNumTemp;
-            info_to_return.username = returnUserTemp;
-            info_to_return.password = returnPassTemp;
-            info_to_return.validated = returnValidTemp;
+            info_to_return.recipientName = values[recipient_name]; //cout << values[recipient_name];
+            info_to_return.physAddr = values[physAddr]; //cout << values[physAddr];
+            info_to_return.emailAddr = values[emailAddr]; //cout << values[emailAddr];
+            info_to_return.contactNum = values[contactNum]; //cout << values[contactNum];
+            info_to_return.username = values[recip_username]; //cout << values[recip_username];
+            info_to_return.password = values[recip_password]; //cout << values[recip_password];
+            info_to_return.validated = values[recip_validated]; //cout << values[recip_validated];
 
             file.close();
             return info_to_return;
@@ -928,7 +929,11 @@ int main()
     //file2.close();
     //read_a_csv();
     
+    recipientInfo my_recipient_info = Get_recipient_info(1, "Recipientinfo.csv");
+
+    cout << my_recipient_info.emailAddr;
+
     
-    menuFunc();
+    //menuFunc();
 }
 
