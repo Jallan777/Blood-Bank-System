@@ -40,7 +40,7 @@ enum recip_data_type{
     emailAddr,
     contactNum,
     recip_username,
-    recip_passord };
+    recip_password };
 
 // Struct to hold Donor Information and eventually transfer it to the CSV file
 struct donorInfo {
@@ -76,6 +76,7 @@ struct recipientInfo {
 void recipientWriteFunc();
 void donorWriteFunc();
 void menuFunc();
+bool InfoExists(std::string target_info, string file_to_open, int where_to_look);
 
 //Simple Function to write a line of variable length, with any character
 void lineFunc(int length, string type) {
@@ -101,36 +102,7 @@ vector<string> split(string s, string delimiter) {
 
 
 //
-bool InfoExists(std::string target_info, string file_to_open, int where_to_look) {
 
-    ifstream file;
-    std::string line;
-    bool isHeader = true;
-
-    file.open(file_to_open, std::ios::in);
-    while (std::getline(file, line)) {
-        // this is the CSV header so skip it      
-        if (isHeader) {
-            isHeader = false;
-            continue;
-        }
-        // split the CSV line into an array
-        vector<string> values = split(line, ",");
-        // the name is at index[1]            
-        string info = values[where_to_look]; // the enum is one less then the column number
-        // check info against the correct column
-        if (info == target_info) {
-            // if we find the info in the right place, clean up our resources
-            // and return early
-            file.close();
-            return true;
-        }
-    }
-    // otherwise we didn't find the user,
-    // clean up our resources and return
-    file.close();
-    return false;
-}
 
 
 
@@ -209,27 +181,31 @@ recipientInfo Get_recipient_info(int data_row_num, string file_to_open) {
         row_counter++; // make sure we are only looking at the desired row
 
         if (data_row_num == row_counter) {
-
+            
 
             // split the CSV line into an array
             // assign the values in the vector to the correct parts of the struct
             vector<string> values = split(line, ",");
-            info_to_return.recipientName = values[0];
-            info_to_return.physAddr = values[1];
-            info_to_return.emailAddr = values[2];
-            info_to_return.contactNum = values[3];
-            info_to_return.username = values[4];
-            info_to_return.password = values[5];
-            info_to_return.validated = values[6];
+            string returnNameTemp = values[recipient_name], returnAddrTemp = values[1], returnEmailTemp = values[2], returnNumTemp = values[3], returnUserTemp = values[4], returnPassTemp = values[5], returnValidTemp = values[6];
+           
+
+            info_to_return.recipientName = returnNameTemp; 
+            info_to_return.physAddr = returnAddrTemp;
+            info_to_return.emailAddr = returnEmailTemp;
+            info_to_return.contactNum = returnNumTemp;
+            info_to_return.username = returnUserTemp;
+            info_to_return.password = returnPassTemp;
+            info_to_return.validated = returnValidTemp;
 
             file.close();
             return info_to_return;
         }
     } file.close();
+    cout << endl << info_to_return.recipientName << endl << info_to_return.contactNum;
     return info_to_return;
 }
 
-//get_recip_info() TODO
+//get_donor_info() TODO
 
 // get admin info() TODO
 
@@ -544,7 +520,7 @@ void recipientRegFunc() {
     cout << "\tRecipient Registration" << endl;
     lineFunc(38, "*");
     cout << endl << "Register an account as a Blood Recipient" << endl << endl;
-    cin.ignore();
+    
     cout << "Please input your information: ";  //Takes user input and adds to struct
 R1:    cout << endl << "Full Recipient Name\t: "; getline(cin, rNameTemp); if (rNameTemp == "" || rNameTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R1; }
     cout << "Physical Address";
@@ -570,7 +546,7 @@ R8:    cout << "Password\t\t: "; getline(cin, rPWordTemp); if (rPWordTemp == "" 
 
 //Recipient Login Fucntion
 void recipientLoginFunc() {           
-    
+    recipientInfo info_to_return;
     //TODO check that the password exist and are correct - exception handle if not
     //TODO figure out how to not make an infinite ask for password loop
 
@@ -592,27 +568,30 @@ void recipientLoginFunc() {
     
     if (username_exists) {
         cout << "exists function is working";
+        int loginCounter = 0;
         //load recip into a struct TODO
         
   
     PassReAsk: 
         string temp_pass;
-        int loginCounter = 0;
+        
         cout << endl << "\tPassword: "; getline(cin, temp_pass);
         cout << endl << endl;
         
         // check that it applies to this user name TODO
+        bool password_exists = InfoExists(temp_pass, recipientFilePath, recip_password);
         
-        if (true) {// TODO applies
+        if (password_exists) {// TODO applies
 
-            // log the user in as recipient ( maybe toggle a bool) TODO
+            cout << endl << "Press Enter to Log In"; cin.ignore();
+            recipFrontPage();
             
             
             //return out of recipientLoginFunc TODO
             //return to recipFrontPage();
         }
         else {
-            if (loginCounter <= 3) {
+            if (loginCounter > 3) {
                 cout << endl << "\tToo Many Login Attempts" << endl << endl << "Returning to Menu...";
                 menuFunc();
             }
@@ -781,7 +760,38 @@ void donorWriteFunc() {
     file2.close();
 }
 
+bool InfoExists(std::string target_info, string file_to_open, int where_to_look) {
 
+    ifstream file;
+    std::string line;
+    bool isHeader = true;
+
+    file.open(file_to_open, std::ios::in);
+    while (std::getline(file, line)) {
+        // this is the CSV header so skip it      
+        if (isHeader) {
+            isHeader = false;
+            continue;
+        }
+        // split the CSV line into an array
+        vector<string> values = split(line, ",");
+        // the name is at index[1]            
+        string info = values[where_to_look]; // the enum is one less then the column number
+        string info2 = values[where_to_look - 1];
+        // check info against the correct column
+        if (info == target_info) {
+            // if we find the info in the right place, clean up our resources
+            // and return early
+            //cout << "Here is your info " << info2 << endl;
+            file.close();
+            return true;
+        }
+    }
+    // otherwise we didn't find the user,
+    // clean up our resources and return
+    file.close();
+    return false;
+}
 
 //Main Menu Function
 void menuFunc() {
