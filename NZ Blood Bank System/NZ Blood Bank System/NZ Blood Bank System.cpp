@@ -13,6 +13,7 @@ string rNameTemp, rPAddTemp, rEAddTemp, rNumTemp, rUNameTemp, rPWordTemp, recipV
 string dFNameTemp, dLNameTemp, dDOBTemp, dDOBDay, dDOBMonth, dDOBYear, dNatTemp, dEthnicTemp, dGenderTemp, dUndCondTemp, dBloodTemp, dNumTemp, dEAddTemp, dPAddTemp, dLastDonateTemp, dUnameTemp, dPwordTemp;
 string recipientFilePath = "RecipientInfo.csv"; // TODO MAKE SURE THIS IS RECIPIENT 
 string donorFilePath = "DonorInfo.csv";
+string adminFilePath = "AdminInfo.csv";
 fstream file1, file2;
 
 
@@ -41,6 +42,11 @@ enum recip_data_type{
     contactNum,
     recip_username,
     recip_password };
+
+enum admin_data_type {
+    admin_username,
+    admin_password
+};
 
 // Struct to hold Donor Information and eventually transfer it to the CSV file
 struct donorInfo {
@@ -198,7 +204,7 @@ recipientInfo Get_recipient_info(int data_row_num, string file_to_open) {
     return info_to_return;
 }
 
-//get_donor_info() TODO
+
 
 // get admin info() TODO
 
@@ -539,32 +545,27 @@ R8:    cout << "Password\t\t: "; getline(cin, rPWordTemp); if (rPWordTemp == "" 
 
 //Recipient Login Fucntion
 void recipientLoginFunc() {           
-    recipientInfo info_to_return;
-    //TODO check that the password exist and are correct - exception handle if not
-    //TODO figure out how to not make an infinite ask for password loop
+    
 
-
-    //formatting
+    //Formatting
     cout << endl << endl;
     cout << "\tRecipient Login" << endl;
     lineFunc(31, "*");
     cout << endl << "Log In as a Blood Recipient" << endl << endl;
 
-    // ask for username
+    //Ask for username
     string temp_user;
-    
-    cout << endl << "\tUsername: "; getline(cin, temp_user); // TODO not prompting the user here
+    cout << endl << "\tUsername: "; getline(cin, temp_user); 
     
     // check username exists in the csv by calling InfoExists() with hardcoded index and file to open
     bool username_exists = InfoExists(temp_user, recipientFilePath, recip_username);
     
     
-    if (username_exists) {
-        cout << "exists function is working";
-        int loginCounter = 0;
+    if (username_exists) {      //If username does exist in the correct spot, carry on
+        cout << endl;
+          //Declare login attepmts counter to track amount of login tries
         unameLine = lineFoundOn;
-        //load recip into a struct TODO
-        
+        int loginCounter = 1;
   
     PassReAsk: 
         string temp_pass;
@@ -572,21 +573,20 @@ void recipientLoginFunc() {
         cout << endl << "\tPassword: "; getline(cin, temp_pass);
         cout << endl << endl;
         
-        // check that it applies to this user name TODO
+        // Check password exists
         bool password_exists = InfoExists(temp_pass, recipientFilePath, recip_password);
         pwordLine = lineFoundOn;
-        if (password_exists && unameLine == pwordLine) {// TODO applies
+        if (password_exists && unameLine == pwordLine) {    //If password exists in the correct place, and it is on the same line as the Username, carry on
 
-            cout << pwordLine << " " << unameLine;
+            
             cout << endl << "Press Enter to Log In"; cin.ignore();
             recipFrontPage();
             
             
-            //return out of recipientLoginFunc TODO
-            //return to recipFrontPage();
+
         }
         else {
-            if (loginCounter > 3) {
+            if (loginCounter > 2) {     //Exceeded login attempts, user is returned to menu
                 cout << endl << "\tToo Many Login Attempts" << endl << endl << "Returning to Menu...";
                 menuFunc();
             }
@@ -695,26 +695,160 @@ R16:    cout << "Password\t\t\t: "; getline(cin, dPwordTemp); if (dPwordTemp == 
 
 //Donor Login Function
 void donorLoginFunc() { //TODO use very similar logic to recipientLoginFunc
+
+
+    
+
+    //Formatting
     cout << endl << endl;
     cout << "\tDonor Login" << endl;
-    lineFunc(28, "*");
+    lineFunc(31, "*");
     cout << endl << "Log In as a Blood Donor" << endl << endl;
-    cout << endl << "\tUsername: ";
-    cout << endl << "\tPassword: ";
-    cout << endl << endl << "Press Enter to Log In"; cin.ignore();
-    donorFrontPage();
+
+    //Ask for username
+    string temp_user;
+    cout << endl << "\tUsername: "; getline(cin, temp_user);
+
+    // check username exists in the csv by calling InfoExists() with hardcoded index and file to open
+    bool username_exists = InfoExists(temp_user, donorFilePath, donor_username);
+
+
+    if (username_exists) {      //If username does exist in the correct spot, carry on
+        cout << endl;
+        int loginCounter = 0;   //Declare login attepmts counter to track amount of login tries
+        unameLine = lineFoundOn;
+
+
+    PassReAsk:
+        string temp_pass;
+
+        cout << endl << "\tPassword: "; getline(cin, temp_pass);
+        cout << endl << endl;
+
+        // Check password exists
+        bool password_exists = InfoExists(temp_pass, donorFilePath, donor_password);
+        pwordLine = lineFoundOn;
+        if (password_exists && unameLine == pwordLine) {    //If password exists in the correct place, and it is on the same line as the Username, carry on
+
+            
+            cout << endl << "Press Enter to Log In"; cin.ignore();
+            donorFrontPage();
+
+
+
+        }
+        else {
+            if (loginCounter > 3) {     //Exceeded login attempts, user is returned to menu
+                cout << endl << "\tToo Many Login Attempts" << endl << endl << "Returning to Menu...";
+                menuFunc();
+            }
+            else {
+                // tell user invalid password! 
+                cout << endl << "\tInvalid Password!, please try again ";
+                loginCounter++;
+                goto PassReAsk;
+            }
+
+        }
+    }
+    else {
+        //tell user "username" isnt registered! 
+        string rLoginRetry;
+        cout << endl << "\tThe username " << temp_user << " is not registered as a donor!" << endl;
+    rLoginRetryRestart:
+        cout << endl << "\tDid you want to try again? [Y]/[N]" << endl << "\t"; cin >> rLoginRetry;
+        cin.ignore();
+        if (rLoginRetry == "Y" || rLoginRetry == "y") {
+            recipientLoginFunc();
+        }
+        else if (rLoginRetry == "N" || rLoginRetry == "n") {
+            cout << endl << "Returning to Menu..." << endl;
+            menuFunc();
+        }
+        else {
+            cout << endl << "Please Input a Valid Option" << endl;
+            goto rLoginRetryRestart;
+        }
+
+
+    }
 }
 
 //Admin Login Function
 void adminLoginFunc() { //TODO use very similar logic to recipientLoginFunc
+    //Formatting
     cout << endl << endl;
     cout << "\tAdministrator Login" << endl;
-    lineFunc(35, "*");
-    cout << endl << "Log In as Administrator" << endl << endl;
-    cout << endl << "\tUsername: ";
-    cout << endl << "\tPassword: ";
-    cout << endl << endl << "Press Enter to Log In" << endl; cin.ignore();
-    adminFrontPage();
+    lineFunc(31, "*");
+    cout << endl << "Log In as Admin" << endl << endl;
+
+    //Ask for username
+    string temp_user;
+    cout << endl << "\tUsername: "; getline(cin, temp_user);
+
+    // check username exists in the csv by calling InfoExists() with hardcoded index and file to open
+    bool username_exists = InfoExists(temp_user, adminFilePath, admin_username);
+
+
+    if (username_exists) {      //If username does exist in the correct spot, carry on
+        cout << endl;
+        int loginCounter = 0;   //Declare login attepmts counter to track amount of login tries
+        unameLine = lineFoundOn;
+
+
+    PassReAsk:
+        string temp_pass;
+
+        cout << endl << "\tPassword: "; getline(cin, temp_pass);
+        cout << endl << endl;
+
+        // Check password exists
+        bool password_exists = InfoExists(temp_pass, adminFilePath, admin_password);
+        pwordLine = lineFoundOn;
+        if (password_exists && unameLine == pwordLine) {    //If password exists in the correct place, and it is on the same line as the Username, carry on
+
+
+            cout << endl << "Press Enter to Log In"; cin.ignore();
+            adminFrontPage();
+
+
+
+        }
+        else {
+            if (loginCounter > 3) {     //Exceeded login attempts, user is returned to menu
+                cout << endl << "\tToo Many Login Attempts" << endl << endl << "Returning to Menu...";
+                menuFunc();
+            }
+            else {
+                // tell user invalid password! 
+                cout << endl << "\tInvalid Password!, please try again ";
+                loginCounter++;
+                goto PassReAsk;
+            }
+
+        }
+    }
+    else {
+        //tell user "username" isnt registered! 
+        string rLoginRetry;
+        cout << endl << "\tThe username " << temp_user << " is not registered as a donor!" << endl;
+    rLoginRetryRestart:
+        cout << endl << "\tDid you want to try again? [Y]/[N]" << endl << "\t"; cin >> rLoginRetry;
+        cin.ignore();
+        if (rLoginRetry == "Y" || rLoginRetry == "y") {
+            recipientLoginFunc();
+        }
+        else if (rLoginRetry == "N" || rLoginRetry == "n") {
+            cout << endl << "Returning to Menu..." << endl;
+            menuFunc();
+        }
+        else {
+            cout << endl << "Please Input a Valid Option" << endl;
+            goto rLoginRetryRestart;
+        }
+
+
+    }
 
 }
 
