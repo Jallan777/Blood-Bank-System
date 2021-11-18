@@ -348,6 +348,7 @@ void donorFrontPage() {             //Landing page after Donor has logged in
             //TODO Edit Info - needs to access file, display current details for user and provide option to change details
             //-needs working find in csv func 
             cout << endl << "Edit Your Information" << endl;
+            //-------------------------------------------------------------Jacob is gonna move on to this tomorrow, probs before the blood group search
             cout << "Press Enter to Return" << endl; cin.ignore();
             donorFrontPage();
         }
@@ -404,9 +405,10 @@ void recipFrontPage() {
         if (bloodOnlySearch == "1") {
             bloodOnlySearch = "A";
             bloodTypeExists = InfoExists(bloodOnlySearch, donorFilePath, blood_group);
+            onLine = lineFoundOn - 1;
             if (bloodTypeExists) {
-                onLine = lineFoundOn - 1;
-                donorInfo my_donor_info = Get_donor_info(onLine++, "DonorInfo.csv");
+                
+                donorInfo my_donor_info = Get_donor_info(onLine, "DonorInfo.csv");
                 if (my_donor_info.bloodGroup == bloodOnlySearch) {
                     cout << endl;
                     lineFunc(50, "*");
@@ -416,10 +418,31 @@ void recipFrontPage() {
                     cout << "Date of Birth\t: " << my_donor_info.dob << endl;
                     cout << "Nationality\t: " << my_donor_info.nationality << endl;
                     cout << "Ethnicity\t: " << my_donor_info.ethnicity << endl;
-                    cout << "Gender\t\t: " << my_donor_info.gender << endl;
+                    cout << "Gender\t\t: " << my_donor_info.gender << endl << endl;
                     cout << "Known Underlying Conditions\t: " << my_donor_info.underlyCond << endl;
                     cout << "Date of Last Donation\t\t: " << my_donor_info.lastDonation << endl;
-                }
+                    
+                }//------------------------------------------------------------------------------------------------- Jacob is working here but it aint working
+                /*system("pause");
+                InfoExists(bloodOnlySearch, donorFilePath, blood_group);
+                if ((lineFoundOn - 1) != onLine) {
+                    lineCompare = lineFoundOn - 1;
+                    donorInfo my_donor_info = Get_donor_info(onLine, "DonorInfo.csv");
+                    if (my_donor_info.bloodGroup == bloodOnlySearch) {
+                        cout << endl;
+                        lineFunc(50, "*");
+                        cout << endl << endl;
+                        cout << "Donor Name\t: " << my_donor_info.firstName << " " << my_donor_info.lastName << endl;
+                        cout << "Blood Group\t: " << my_donor_info.bloodGroup << endl;
+                        cout << "Date of Birth\t: " << my_donor_info.dob << endl;
+                        cout << "Nationality\t: " << my_donor_info.nationality << endl;
+                        cout << "Ethnicity\t: " << my_donor_info.ethnicity << endl;
+                        cout << "Gender\t\t: " << my_donor_info.gender << endl << endl;
+                        cout << "Known Underlying Conditions\t: " << my_donor_info.underlyCond << endl;
+                        cout << "Date of Last Donation\t\t: " << my_donor_info.lastDonation << endl;
+
+                    }
+                }*/
             }
             
         }
