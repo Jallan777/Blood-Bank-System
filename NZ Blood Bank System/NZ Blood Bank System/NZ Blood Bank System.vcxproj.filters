@@ -28,5 +28,8 @@
     <None Include="Patient info.csv">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="RecipientInfo.csv">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

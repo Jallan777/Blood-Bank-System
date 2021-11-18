@@ -8,8 +8,8 @@
 
 using namespace std;
 
-
-string rNameTemp, rPAddTemp, rEAddTemp, rNumTemp, rUNameTemp, rPWordTemp, recipValidTemp;
+int lineFoundOn, unameLine, pwordLine;
+string rNameTemp, rPAddTemp, rEAddTemp, rNumTemp, rUNameTemp, rPWordTemp, recipValidTemp, passwordCorrect;
 string dFNameTemp, dLNameTemp, dDOBTemp, dDOBDay, dDOBMonth, dDOBYear, dNatTemp, dEthnicTemp, dGenderTemp, dUndCondTemp, dBloodTemp, dNumTemp, dEAddTemp, dPAddTemp, dLastDonateTemp, dUnameTemp, dPwordTemp;
 string recipientFilePath = "RecipientInfo.csv"; // TODO MAKE SURE THIS IS RECIPIENT 
 string donorFilePath = "DonorInfo.csv";
@@ -101,14 +101,6 @@ vector<string> split(string s, string delimiter) {
 }
 
 
-//
-
-
-
-
-
-
-
 //Extract Donor Information from CSV File into struct
 //donorInfo Get_donor_info(int data_row_num, string file_to_open) { //TODO put a line from the csv into a struct and returning that struct
 //
@@ -186,7 +178,7 @@ recipientInfo Get_recipient_info(int data_row_num, string file_to_open) {
             // split the CSV line into an array
             // assign the values in the vector to the correct parts of the struct
             vector<string> values = split(line, ",");
-            string returnNameTemp = values[recipient_name], returnAddrTemp = values[1], returnEmailTemp = values[2], returnNumTemp = values[3], returnUserTemp = values[4], returnPassTemp = values[5], returnValidTemp = values[6];
+            string returnNameTemp = values[0], returnAddrTemp = values[1], returnEmailTemp = values[2], returnNumTemp = values[3], returnUserTemp = values[4], returnPassTemp = values[5], returnValidTemp = values[6];
            
 
             info_to_return.recipientName = returnNameTemp; 
@@ -200,8 +192,9 @@ recipientInfo Get_recipient_info(int data_row_num, string file_to_open) {
             file.close();
             return info_to_return;
         }
+        
     } file.close();
-    cout << endl << info_to_return.recipientName << endl << info_to_return.contactNum;
+   
     return info_to_return;
 }
 
@@ -569,6 +562,7 @@ void recipientLoginFunc() {
     if (username_exists) {
         cout << "exists function is working";
         int loginCounter = 0;
+        unameLine = lineFoundOn;
         //load recip into a struct TODO
         
   
@@ -580,9 +574,10 @@ void recipientLoginFunc() {
         
         // check that it applies to this user name TODO
         bool password_exists = InfoExists(temp_pass, recipientFilePath, recip_password);
-        
-        if (password_exists) {// TODO applies
+        pwordLine = lineFoundOn;
+        if (password_exists && unameLine == pwordLine) {// TODO applies
 
+            cout << pwordLine << " " << unameLine;
             cout << endl << "Press Enter to Log In"; cin.ignore();
             recipFrontPage();
             
@@ -765,9 +760,10 @@ bool InfoExists(std::string target_info, string file_to_open, int where_to_look)
     ifstream file;
     std::string line;
     bool isHeader = true;
-
+    int lineCounter = 0;
     file.open(file_to_open, std::ios::in);
     while (std::getline(file, line)) {
+        lineCounter++;
         // this is the CSV header so skip it      
         if (isHeader) {
             isHeader = false;
@@ -777,12 +773,13 @@ bool InfoExists(std::string target_info, string file_to_open, int where_to_look)
         vector<string> values = split(line, ",");
         // the name is at index[1]            
         string info = values[where_to_look]; // the enum is one less then the column number
-        string info2 = values[where_to_look - 1];
+        //passwordCorrect = values[where_to_look + 1];
         // check info against the correct column
         if (info == target_info) {
             // if we find the info in the right place, clean up our resources
             // and return early
             //cout << "Here is your info " << info2 << endl;
+            lineFoundOn = lineCounter;
             file.close();
             return true;
         }
