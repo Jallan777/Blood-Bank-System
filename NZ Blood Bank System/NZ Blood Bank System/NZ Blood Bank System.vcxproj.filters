@@ -31,5 +31,11 @@
     <None Include="RecipientInfo.csv">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="DonorInfo.csv">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="AdminInfo.csv">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

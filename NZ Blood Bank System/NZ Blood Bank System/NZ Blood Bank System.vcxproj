@@ -145,6 +145,8 @@
     <ClInclude Include="Global functions.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="AdminInfo.csv" />
+    <None Include="DonorInfo.csv" />
     <None Include="Patient info.csv" />
     <None Include="RecipientInfo.csv" />
   </ItemGroup>
