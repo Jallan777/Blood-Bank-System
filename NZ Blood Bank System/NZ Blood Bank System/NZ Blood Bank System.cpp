@@ -11,7 +11,7 @@ using namespace std;
 int lineFoundOn, unameLine, pwordLine;
 string rNameTemp, rPAddTemp, rEAddTemp, rNumTemp, rUNameTemp, rPWordTemp, recipValidTemp, passwordCorrect;
 string dFNameTemp, dLNameTemp, dDOBTemp, dDOBDay, dDOBMonth, dDOBYear, dNatTemp, dEthnicTemp, dGenderTemp, dUndCondTemp, dBloodTemp, dNumTemp, dEAddTemp, dPAddTemp, dLastDonateTemp, dUnameTemp, dPwordTemp;
-string recipientFilePath = "RecipientInfo.csv"; // TODO MAKE SURE THIS IS RECIPIENT 
+string recipientFilePath = "RecipientInfo.csv"; 
 string donorFilePath = "DonorInfo.csv";
 string adminFilePath = "AdminInfo.csv";
 fstream file1, file2;
