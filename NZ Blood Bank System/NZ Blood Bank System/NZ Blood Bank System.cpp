@@ -6,10 +6,11 @@
 #include <string>
 #include <vector>
 
+
 using namespace std;
 
-int lineFoundOn, unameLine, pwordLine;
-string rNameTemp, rPAddTemp, rEAddTemp, rNumTemp, rUNameTemp, rPWordTemp, recipValidTemp, passwordCorrect;
+int lineFoundOn, unameLine, pwordLine, sameLineCheck;
+string rNameTemp, rPAddTemp, rEAddTemp, rNumTemp, rUNameTemp, rPWordTemp, recipValidTemp, passwordCorrect, infoReplace, infoNew;
 string dFNameTemp, dLNameTemp, dDOBTemp, dDOBDay, dDOBMonth, dDOBYear, dNatTemp, dEthnicTemp, dGenderTemp, dUndCondTemp, dBloodTemp, dNumTemp, dEAddTemp, dPAddTemp, dLastDonateTemp, dUnameTemp, dPwordTemp;
 string recipientFilePath = "RecipientInfo.csv"; // TODO MAKE SURE THIS IS RECIPIENT 
 string donorFilePath = "DonorInfo.csv";
@@ -67,6 +68,7 @@ struct donorInfo {
     string password = dPwordTemp;
 
     void donorRegFunc();
+    void donorEditInfo();
 };
 
 // Struct to hold Recipient Information and eventually transfer it to the CSV file
@@ -84,12 +86,31 @@ void recipientWriteFunc();
 void donorWriteFunc();
 void menuFunc();
 bool InfoExists(std::string target_info, string file_to_open, int where_to_look);
+void donorEditFunc();
+
 
 //Simple Function to write a line of variable length, with any character
 void lineFunc(int length, string type) {
     for (int i = 0; i < length; i++)
         cout << type;
 }
+
+void findAndReplace(string& data, string toSearch, string replaceWith) {
+    size_t pos = data.find(toSearch);
+    while (pos != std::string::npos){
+        // Replace this occurrence of Sub String
+        data.replace(pos, toSearch.size(), replaceWith);
+        // Get the next occurrence from the current position
+        pos = data.find(toSearch, pos + replaceWith.size());
+    }
+}
+
+//bool findFunc(string& data, string toSearch) {
+//    size_t pos = data.find(toSearch);
+//    while (pos != std::string::npos) {
+//
+//    }
+//}
 
 // for string delimiter                                                      <---- copied from stack overflow https://stackoverflow.com/questions/14265581/parse-split-a-string-in-c-using-string-delimiter-standard-c
 vector<string> split(string s, string delimiter) {
@@ -135,13 +156,13 @@ recipientInfo Get_recipient_info(int data_row_num, string file_to_open) {
             
            
 
-            info_to_return.recipientName = values[recipient_name]; //cout << values[recipient_name];
-            info_to_return.physAddr = values[physAddr]; //cout << values[physAddr];
-            info_to_return.emailAddr = values[emailAddr]; //cout << values[emailAddr];
-            info_to_return.contactNum = values[contactNum]; //cout << values[contactNum];
-            info_to_return.username = values[recip_username]; //cout << values[recip_username];
-            info_to_return.password = values[recip_password]; //cout << values[recip_password];
-            info_to_return.validated = values[recip_validated]; //cout << values[recip_validated];
+            info_to_return.recipientName = values[recipient_name]; 
+            info_to_return.physAddr = values[physAddr]; 
+            info_to_return.emailAddr = values[emailAddr]; 
+            info_to_return.contactNum = values[contactNum]; 
+            info_to_return.username = values[recip_username]; 
+            info_to_return.password = values[recip_password]; 
+            info_to_return.validated = values[recip_validated]; 
 
             file.close();
             return info_to_return;
@@ -347,10 +368,51 @@ void donorFrontPage() {             //Landing page after Donor has logged in
         else if (dManageChoice == "2") {
             //TODO Edit Info - needs to access file, display current details for user and provide option to change details
             //-needs working find in csv func 
-            cout << endl << "Edit Your Information" << endl;
-            //-------------------------------------------------------------Jacob is gonna move on to this tomorrow, probs before the blood group search
-            cout << "Press Enter to Return" << endl; cin.ignore();
-            donorFrontPage();
+            donorInfo donorEdit;
+            cout << endl << "Your Current Information" << endl;
+            lineFunc(50, "*");
+            cout << endl << endl;
+            cout << "Full Name\t: " << my_donor_info.firstName << " " << my_donor_info.lastName << endl;
+            string physAddrTemp = my_donor_info.physAddr;
+            findAndReplace(physAddrTemp, "/", ", ");
+            cout << "Physical Address\t\t: " << physAddrTemp << endl << endl;
+
+            cout << "Date of Birth\t\t\t: " << my_donor_info.dob << endl; 
+            cout << "Nationality\t\t\t: " << my_donor_info.nationality << endl;
+            cout << "Ethnicity\t\t\t: " << my_donor_info.ethnicity << endl;
+            cout << "Gender\t\t\t\t: " << my_donor_info.gender << endl << endl;
+
+            cout << "Blood Group\t\t\t: " << my_donor_info.bloodGroup << endl;
+            cout << "Known Underlying Conditions\t: " << my_donor_info.underlyCond << endl;
+            cout << "Contact Number\t\t\t: " << my_donor_info.contactNum.erase(0, 1) << endl;
+            cout << "Email Address\t\t\t: " << my_donor_info.emailAddr << endl << endl;
+
+            cout << "Username\t\t\t: " << my_donor_info.username << endl;
+            cout << "Password\t\t\t: " << my_donor_info.password << endl << endl;
+
+            string infoChange;
+        InfoChangeAsk:
+            cout << "Would you like to change anything? [Y][N]" << endl; cin >> infoChange;
+            if (infoChange == "Y" || infoChange == "y") {
+                bool isCorrectLine = InfoExists(my_donor_info.firstName, donorFilePath, First_Name);
+                int sameLineCheck = lineFoundOn;
+                if (isCorrectLine) {
+                    cin.ignore();
+                    donorEdit.donorEditInfo();
+                    cout << endl << "Your information has been changed!" << endl;
+                    cout << endl << "Returning to Donor Menu" << endl;
+                    donorFrontPage();
+                }
+            }
+            else if (infoChange == "N" || infoChange == "n") {
+                cout << endl << "Saving Your Information..." << endl;
+                donorFrontPage();
+            }
+            else {
+                cout << endl << "Please Input a Valid Option..." << endl;
+                goto InfoChangeAsk;
+            }
+            
         }
         else if (dManageChoice == "3") {
             cout << endl << "Press Enter to Return" << endl; cin.ignore();
@@ -402,63 +464,147 @@ void recipFrontPage() {
         cout << "\t[1] Type A" << "\t[2]Type B" << endl << "\t[3]Type AB" << "\t [4]Type O" << endl << endl;
         cout << "Please Select an Option: "; getline(cin, bloodOnlySearch);
         bool bloodTypeExists;
+        string bloodSearchKey;
+        ifstream file;
+        std::string line;
         if (bloodOnlySearch == "1") {
-            bloodOnlySearch = "A";
-            bloodTypeExists = InfoExists(bloodOnlySearch, donorFilePath, blood_group);
-            onLine = lineFoundOn - 1;
-            if (bloodTypeExists) {
-                
-                donorInfo my_donor_info = Get_donor_info(onLine, "DonorInfo.csv");
-                if (my_donor_info.bloodGroup == bloodOnlySearch) {
-                    cout << endl;
-                    lineFunc(50, "*");
-                    cout << endl << endl;
-                    cout << "Donor Name\t: " << my_donor_info.firstName << " " << my_donor_info.lastName << endl;
-                    cout << "Blood Group\t: " << my_donor_info.bloodGroup << endl;
-                    cout << "Date of Birth\t: " << my_donor_info.dob << endl;
-                    cout << "Nationality\t: " << my_donor_info.nationality << endl;
-                    cout << "Ethnicity\t: " << my_donor_info.ethnicity << endl;
-                    cout << "Gender\t\t: " << my_donor_info.gender << endl << endl;
-                    cout << "Known Underlying Conditions\t: " << my_donor_info.underlyCond << endl;
-                    cout << "Date of Last Donation\t\t: " << my_donor_info.lastDonation << endl;
-                    
-                }//------------------------------------------------------------------------------------------------- Jacob is working here but it aint working
-                /*system("pause");
-                InfoExists(bloodOnlySearch, donorFilePath, blood_group);
-                if ((lineFoundOn - 1) != onLine) {
-                    lineCompare = lineFoundOn - 1;
-                    donorInfo my_donor_info = Get_donor_info(onLine, "DonorInfo.csv");
-                    if (my_donor_info.bloodGroup == bloodOnlySearch) {
-                        cout << endl;
-                        lineFunc(50, "*");
-                        cout << endl << endl;
-                        cout << "Donor Name\t: " << my_donor_info.firstName << " " << my_donor_info.lastName << endl;
-                        cout << "Blood Group\t: " << my_donor_info.bloodGroup << endl;
-                        cout << "Date of Birth\t: " << my_donor_info.dob << endl;
-                        cout << "Nationality\t: " << my_donor_info.nationality << endl;
-                        cout << "Ethnicity\t: " << my_donor_info.ethnicity << endl;
-                        cout << "Gender\t\t: " << my_donor_info.gender << endl << endl;
-                        cout << "Known Underlying Conditions\t: " << my_donor_info.underlyCond << endl;
-                        cout << "Date of Last Donation\t\t: " << my_donor_info.lastDonation << endl;
-
-                    }
-                }*/
+            bloodSearchKey = "A";
+           
+            int lineCounter = 0;
+            file.open(donorFilePath, std::ios::in);
+            while (std::getline(file, line)) {
+                lineCounter++;
             }
-            
+            int donorOnLine = lineCounter;
+
+            for (int i = 1; i < donorOnLine; i++) {
+                if (i == donorOnLine - 1) {
+                    cout << endl << endl << "That is all the registered donors!" << endl;
+                    recipFrontPage();
+                }
+                donorInfo my_donor_info = Get_donor_info((i), "DonorInfo.csv");
+                if (my_donor_info.bloodGroup == bloodSearchKey) {
+                    cout << "Donors with Blood Type " << bloodSearchKey << endl;
+                    lineFunc(40, "*");
+                    cout << endl << endl;
+                    cout << "Full Name\t: " << my_donor_info.firstName << " " << my_donor_info.lastName << endl;
+                    cout << "Date of Birth\t: " << my_donor_info.dob << endl;
+                    cout << "Blood Group\t: " << my_donor_info.bloodGroup << endl;
+                    cout << "Date of Last Donation: " << my_donor_info.lastDonation << endl;
+                    cout << "Known Underlying Conditions: " << my_donor_info.underlyCond << endl << endl;
+                    cout << "Gender\t\t: " << my_donor_info.gender << endl;
+                    cout << "Nationality\t: " << my_donor_info.nationality << endl;
+                    cout << "Ethnicity\t: " << my_donor_info.ethnicity << endl << endl;
+
+                    cout << endl << endl << "Press Enter to View Next Donor..."; cin.ignore();
+                }
+
+                file.close();
+            }
         }
         else if (bloodOnlySearch == "2") {
-            bloodOnlySearch = "B";
-            bloodTypeExists = InfoExists(bloodOnlySearch, donorFilePath, blood_group);
+            bloodSearchKey = "B";
+            int lineCounter = 0;
+            file.open(donorFilePath, std::ios::in);
+            while (std::getline(file, line)) {
+                lineCounter++;
+            }
+            int donorOnLine = lineCounter;
+
+            for (int i = 1; i < donorOnLine; i++) {
+                if (i == donorOnLine - 1) {
+                    cout << endl << endl << "That is all the registered donors!" << endl;
+                    recipFrontPage();
+                }
+                donorInfo my_donor_info = Get_donor_info((i), "DonorInfo.csv");
+                if (my_donor_info.bloodGroup == bloodSearchKey) {
+                    cout << "Donors with Blood Type " << bloodSearchKey << endl;
+                    lineFunc(40, "*");
+                    cout << endl << endl;
+                    cout << "Full Name\t: " << my_donor_info.firstName << " " << my_donor_info.lastName << endl;
+                    cout << "Date of Birth\t: " << my_donor_info.dob << endl;
+                    cout << "Blood Group\t: " << my_donor_info.bloodGroup << endl;
+                    cout << "Date of Last Donation: " << my_donor_info.lastDonation << endl;
+                    cout << "Known Underlying Conditions: " << my_donor_info.underlyCond << endl << endl;
+                    cout << "Gender\t\t: " << my_donor_info.gender << endl;
+                    cout << "Nationality\t: " << my_donor_info.nationality << endl;
+                    cout << "Ethnicity\t: " << my_donor_info.ethnicity << endl << endl;
+
+                    cout << endl << endl << "Press Enter to View Next Donor..."; cin.ignore();
+                }
+
+                file.close();
+            }
             //Find any donors that match blood type, display their full name and blood group
         }
         else if (bloodOnlySearch == "3") {
-            bloodOnlySearch = "AB";
-            bloodTypeExists = InfoExists(bloodOnlySearch, donorFilePath, blood_group);
+            bloodSearchKey = "AB";
+            int lineCounter = 0;
+            file.open(donorFilePath, std::ios::in);
+            while (std::getline(file, line)) {
+                lineCounter++;
+            }
+            int donorOnLine = lineCounter;
+
+            for (int i = 1; i < donorOnLine; i++) {
+                if (i == donorOnLine - 1) {
+                    cout << endl << endl << "That is all the registered donors!" << endl;
+                    recipFrontPage();
+                }
+                donorInfo my_donor_info = Get_donor_info((i), "DonorInfo.csv");
+                if (my_donor_info.bloodGroup == bloodSearchKey) {
+                    cout << "Donors with Blood Type " << bloodSearchKey << endl;
+                    lineFunc(40, "*");
+                    cout << endl << endl;
+                    cout << "Full Name\t: " << my_donor_info.firstName << " " << my_donor_info.lastName << endl;
+                    cout << "Date of Birth\t: " << my_donor_info.dob << endl;
+                    cout << "Blood Group\t: " << my_donor_info.bloodGroup << endl;
+                    cout << "Date of Last Donation: " << my_donor_info.lastDonation << endl;
+                    cout << "Known Underlying Conditions: " << my_donor_info.underlyCond << endl << endl;
+                    cout << "Gender\t\t: " << my_donor_info.gender << endl;
+                    cout << "Nationality\t: " << my_donor_info.nationality << endl;
+                    cout << "Ethnicity\t: " << my_donor_info.ethnicity << endl << endl;
+
+                    cout << endl << endl << "Press Enter to View Next Donor..."; cin.ignore();
+                }
+
+                file.close();
+            }
             //Find any donors that match blood type, display their full name and blood group
         }
         else if (bloodOnlySearch == "4") {
-            bloodOnlySearch = "O";
-            bloodTypeExists = InfoExists(bloodOnlySearch, donorFilePath, blood_group);
+            bloodSearchKey = "O";
+            int lineCounter = 0;
+            file.open(donorFilePath, std::ios::in);
+            while (std::getline(file, line)) {
+                lineCounter++;
+            }
+            int donorOnLine = lineCounter;
+
+            for (int i = 1; i < donorOnLine; i++) {
+                if (i == donorOnLine - 1) {
+                    cout << endl << endl << "That is all the registered donors!" << endl;
+                    recipFrontPage();
+                }
+                donorInfo my_donor_info = Get_donor_info((i), "DonorInfo.csv");
+                if (my_donor_info.bloodGroup == bloodSearchKey) {
+                    cout << "Donors with Blood Type " << bloodSearchKey << endl;
+                    lineFunc(40, "*");
+                    cout << endl << endl;
+                    cout << "Full Name\t: " << my_donor_info.firstName << " " << my_donor_info.lastName << endl;
+                    cout << "Date of Birth\t: " << my_donor_info.dob << endl;
+                    cout << "Blood Group\t: " << my_donor_info.bloodGroup << endl;
+                    cout << "Date of Last Donation: " << my_donor_info.lastDonation << endl;
+                    cout << "Known Underlying Conditions: " << my_donor_info.underlyCond << endl << endl;
+                    cout << "Gender\t\t: " << my_donor_info.gender << endl;
+                    cout << "Nationality\t: " << my_donor_info.nationality << endl;
+                    cout << "Ethnicity\t: " << my_donor_info.ethnicity << endl << endl;
+
+                    cout << endl << endl << "Press Enter to View Next Donor..."; cin.ignore();
+                }
+
+                file.close();
+            }
             //Find any donors that match blood type, display their full name and blood group
         }
         else {
@@ -573,11 +719,90 @@ void adminFrontPage() {
         cout << "\t[3] Return to Admin Menu" << endl << endl;
         cout << "Please Select an Option: "; cin >> adminInfoChoice;
         if (adminInfoChoice == "1") {
-            //view donor information (read 1 by 1, and ask to contine?)
+            cin.ignore();
+            cout << endl << "Donor Information: " << endl << endl;
+            
+            ifstream file;
+            std::string line;
+            int lineCounter = 0;
+            file.open(donorFilePath, std::ios::in);
+            while (std::getline(file, line)) {
+                lineCounter++;
+            }
+            int adViewCounter = lineCounter;
+
+            for (int i = 1; i < adViewCounter; i++) {
+                if (i == adViewCounter  - 1) {
+                    cout << endl << endl << "That is all the registered donors!" << endl;
+                    adminFrontPage();
+                }
+                    donorInfo my_donor_info = Get_donor_info((i), "DonorInfo.csv");
+                    cout << endl << my_donor_info.firstName << " " << my_donor_info.lastName << " Information" << endl;
+                    lineFunc(50, "*");
+                    cout << endl << endl;
+                    cout << "Full Name\t: " << my_donor_info.firstName << " " << my_donor_info.lastName << endl;
+                    string physAddrTemp = my_donor_info.physAddr;
+                    findAndReplace(physAddrTemp, "/", ", ");
+                    cout << "Physical Address\t\t: " << physAddrTemp << endl << endl;
+
+                    cout << "Date of Birth\t\t\t: " << my_donor_info.dob << endl;
+                    cout << "Nationality\t\t\t: " << my_donor_info.nationality << endl;
+                    cout << "Ethnicity\t\t\t: " << my_donor_info.ethnicity << endl;
+                    cout << "Gender\t\t\t\t: " << my_donor_info.gender << endl << endl;
+
+                    cout << "Blood Group\t\t\t: " << my_donor_info.bloodGroup << endl;
+                    cout << "Known Underlying Conditions\t: " << my_donor_info.underlyCond << endl;
+                    cout << "Contact Number\t\t\t: " << my_donor_info.contactNum.erase(0, 1) << endl;
+                    cout << "Email Address\t\t\t: " << my_donor_info.emailAddr << endl << endl;
+
+                    cout << "Username\t\t\t: " << my_donor_info.username << endl;
+                    cout << "Password\t\t\t: " << my_donor_info.password << endl << endl;
+
+                    cout << endl << endl << "Press Enter to View Next Donor..."; cin.ignore();
+            }
+            file.close();
         }
         else if (adminInfoChoice == "2") {
-            //view recipient information (1 by 1 again?)
+            cin.ignore();
+            cout << endl << "Recipient Information: " << endl << endl;
+
+            ifstream file;
+            std::string line;
+            int lineCounter = 0;
+            file.open(recipientFilePath, std::ios::in);
+            while (std::getline(file, line)) {
+                lineCounter++;
+            }
+            int adViewCounter = lineCounter;
+
+            for (int i = 1; i < adViewCounter; i++) {
+                //if (i - 1 == adViewCounter - 1) {
+                //    cout << endl << endl << "That is all the registered recipients!" << endl;
+                //    adminFrontPage();
+                //}
+                recipientInfo my_recipient_info = Get_recipient_info((i), "RecipientInfo.csv");
+                cout << endl << my_recipient_info.recipientName << " Information" << endl;
+                lineFunc(50, "*");
+                cout << endl << endl;
+                cout << "Recipient Name\t: " << my_recipient_info.recipientName << endl;
+                string physAddrTemp = my_recipient_info.physAddr;
+                findAndReplace(physAddrTemp, "/", ", ");
+                cout << "Physical Address\t\t: " << physAddrTemp << endl << endl;
+
+                cout << "Contact Number\t\t\t: " << my_recipient_info.contactNum.erase(0, 1) << endl;
+                cout << "Email Address\t\t\t: " << my_recipient_info.emailAddr << endl;
+                cout << "Validated\t\t\t: " << my_recipient_info.validated << endl << endl;
+
+                cout << "Username\t\t\t: " << my_recipient_info.username << endl;
+                cout << "Password\t\t\t: " << my_recipient_info.password << endl << endl;
+
+                cout << endl << endl << "Press Enter to View Next Recipient..."; cin.ignore();
+            }
+            cout << endl << "That is all the registered recipients!" << endl;
+            file.close();
+            adminFrontPage();
         }
+        
         else if (adminInfoChoice == "3") {
             cout << endl << "Press Enter to Return" << endl; cin.ignore();
             adminFrontPage();
@@ -588,19 +813,19 @@ void adminFrontPage() {
         }
     }
     else if(adminMenuChoice == "2") {
-        //Update Donor Blood Test Reports
+        //Update Donor Blood Test Reports TODO
     }
     else if(adminMenuChoice == "3") { 
-        //Donor Report
+        //Donor Report TODO
     }
     else if(adminMenuChoice == "4") { 
-        //Recipient Report
+        //Recipient Report TODO
     }
     else if(adminMenuChoice == "5") {
-        //Location Based Report
+        //Location Based Report TODO
     }
     else if (adminMenuChoice == "6") {
-        //Location Based Report
+        //Location Based Report TODO
     }
     else if (adminMenuChoice == "7") {
         cout << endl << "Logging out..." << endl;
@@ -616,7 +841,7 @@ void adminFrontPage() {
 //Recipient Registration Function
 void recipientRegFunc() {           
     struct recipientInfo recipient;     //Declares the relevant struct in the function to be able to fill struct with data
-    string rStreet, rSuburb, rCity, rCountry;
+    string rStreet, rSuburb, rCity;
     cout << endl << endl;
     cout << "\tRecipient Registration" << endl;
     lineFunc(38, "*");
@@ -628,7 +853,7 @@ R1:    cout << endl << "Full Recipient Name\t: "; getline(cin, rNameTemp); if (r
 R2:    cout << endl << "\t(Street)\t\t: "; getline(cin, rStreet); if (rStreet == "" || rStreet == " ") { cout << endl << "Text Field is Empty!" << endl; goto R2; }
 R3:    cout << "\t(Suburb/Town)\t\t: "; getline(cin, rSuburb); if (rSuburb == "" || rSuburb == " ") { cout << endl << "Text Field is Empty!" << endl; goto R3; }
 R4:    cout << "\t(City)\t\t\t: "; getline(cin, rCity); if (rCity == "" || rCity == " ") { cout << endl << "Text Field is Empty!" << endl; goto R4; }
-    rPAddTemp = rStreet + "/" + rSuburb + "/" + rCity + "/" + rCountry;
+    rPAddTemp = rStreet + "/" + rSuburb + "/" + rCity;
 R5:    cout << "Email Address\t\t: "; getline(cin, rEAddTemp); if (rEAddTemp == "" || rEAddTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R5; }
 R6:    cout << "Contact Number\t\t: "; getline(cin, rNumTemp); if (rNumTemp == "" || rNumTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R6; }
 R7:    cout << "Username\t\t: "; getline(cin, rUNameTemp); if (rUNameTemp == "" || rUNameTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R7; }
@@ -731,7 +956,7 @@ void recipientLoginFunc() {
 void donorInfo::donorRegFunc() {               //Styled to have inputs all start on the same column
     struct donorInfo donor;
 
-    string bloodSelect, dStreet, dSuburb, dCity, dCountry;
+    string bloodSelect, dStreet, dSuburb, dCity;
     cout << endl << endl;
 
     //Formatting
@@ -782,7 +1007,7 @@ R11:    cout << "Email Address\t\t\t: "; getline(cin, dEAddTemp); if ( dEAddTemp
 R12:    cout << endl << "\t(Street)\t\t: "; getline(cin, dStreet); if ( dStreet == "" || dStreet == " ") { cout << endl << "Text Field is Empty!" << endl; goto R12; }
 R13:    cout << "\t(Suburb/Town)\t\t: "; getline(cin, dSuburb); if ( dSuburb == "" || dSuburb == " ") { cout << endl << "Text Field is Empty!" << endl; goto R13; }
 R14:    cout << "\t(City)\t\t\t: "; getline(cin, dCity); if ( dCity == "" || dCity == " ") { cout << endl << "Text Field is Empty!" << endl; goto R14; }
-    dPAddTemp = dStreet + "/" + dSuburb + "/" + dCity + "/" + dCountry;     //Address parts combined into one string
+    dPAddTemp = dStreet + "/" + dSuburb + "/" + dCity;     //Address parts combined into one string
     cout << "Date of Last Donation" << endl; 
     cout << "(Press Enter if Unknown)\t: "; getline(cin, dLastDonateTemp);
     if (dLastDonateTemp == "") {                                            //If statement allows user to press enter and move past this question, and fills data with "unknown"
@@ -795,6 +1020,81 @@ R16:    cout << "Password\t\t\t: "; getline(cin, dPwordTemp); if (dPwordTemp == 
     cout << "Thanks for Registering!" << endl;
     cout << endl << "Returning to Menu..." << endl;
     
+}
+
+void donorInfo::donorEditInfo() {
+    string bloodSelect, dStreet, dSuburb, dCity;
+    donorInfo my_donor_info = Get_donor_info((lineFoundOn - 1), "DonorInfo.csv");
+    cout << "Please input your new information: ";
+
+    //Takes user input and stores in temp variable before moving into structure
+R1:    cout << endl << "First Name\t\t\t: "; getline(cin, dFNameTemp); if (dFNameTemp == "" || dFNameTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R1; }
+    //findAndReplace(my_donor_info.firstName, my_donor_info.firstName, dFNameTemp);
+R2:    cout << "Last Name\t\t\t: "; getline(cin, dLNameTemp); if (dLNameTemp == "" || dLNameTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R2; }
+
+    cout << "Date of Birth\t\t\t(DD/MM/YYYY)";
+R3:    cout << endl << "\t\t\tDay\t: "; getline(cin, dDOBDay); if (dDOBDay == "" || dDOBDay == " ") { cout << endl << "Text Field is Empty!" << endl; goto R3; }
+
+R4:    cout << "\t\t\tMonth\t: "; getline(cin, dDOBMonth); if (dDOBMonth == "" || dDOBMonth == " ") { cout << endl << "Text Field is Empty!" << endl; goto R4; }
+
+R5:    cout << "\t\t\tYear\t: "; getline(cin, dDOBYear); if (dDOBYear == "" || dDOBYear == " ") { cout << endl << "Please input Year" << endl; goto R5; }
+
+    dDOBTemp = dDOBDay + "/" + dDOBMonth + "/" + dDOBYear; //DOB split into different parts to try make sure the format is the same when put into struct
+R6:    cout << "Nationality\t\t\t: "; getline(cin, dNatTemp); if (dNatTemp == "" || dNatTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R6; }
+
+R7:    cout << "Ethnicity\t\t\t: "; getline(cin, dEthnicTemp); if (dEthnicTemp == "" || dEthnicTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R7; }
+
+R8:    cout << "Gender\t\t\t\t: "; getline(cin, dGenderTemp); if (dGenderTemp == "" || dGenderTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R8; }
+
+R9:    cout << "Known Underlying Conditions\t: "; getline(cin, dUndCondTemp); if (dUndCondTemp == "" || dUndCondTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R9; }
+
+    cout << "Please select your Blood Group\t:";            //Asks user to select their blood group from a list of selections
+    cout << endl << endl << "\t[1] A+/-\t[2] B+/-";
+    cout << endl << "\t[3] AB+/-\t[4] O+/-" << endl << endl;
+BloodSelectAskAgain:
+    cout << "Blood Group: "; cin >> bloodSelect;
+    if (bloodSelect == "1") {
+        bloodSelect = "A";
+    }
+    else if (bloodSelect == "2") {
+        bloodSelect = "B";
+    }
+    else if (bloodSelect == "3") {
+        bloodSelect = "AB";
+    }
+    else if (bloodSelect == "4") {
+        bloodSelect = "O";
+    }
+    else {
+        cout << endl << "Please select a valid option" << endl;
+        goto BloodSelectAskAgain;
+    }
+    cin.ignore();
+    dBloodTemp = bloodSelect;
+
+R10:    cout << endl << "Contact Number\t\t\t: "; getline(cin, dNumTemp); if (dNumTemp == "" || dNumTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R10; }
+
+R11:    cout << "Email Address\t\t\t: "; getline(cin, dEAddTemp); if (dEAddTemp == "" || dEAddTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R11; }
+
+    cout << "Physical Address\t\t:";                                        //Breaks down address into parts, so user doesn't try to use comma's to seperate values
+R12:    cout << endl << "\t(Street)\t\t: "; getline(cin, dStreet); if (dStreet == "" || dStreet == " ") { cout << endl << "Text Field is Empty!" << endl; goto R12; }
+
+R13:    cout << "\t(Suburb/Town)\t\t: "; getline(cin, dSuburb); if (dSuburb == "" || dSuburb == " ") { cout << endl << "Text Field is Empty!" << endl; goto R13; }
+
+R14:    cout << "\t(City)\t\t\t: "; getline(cin, dCity); if (dCity == "" || dCity == " ") { cout << endl << "Text Field is Empty!" << endl; goto R14; }
+
+    dPAddTemp = dStreet + "/" + dSuburb + "/" + dCity;     //Address parts combined into one string
+    cout << "Date of Last Donation" << endl;
+    cout << "(Press Enter if Unknown)\t: "; getline(cin, dLastDonateTemp);
+    if (dLastDonateTemp == "") {                                            //If statement allows user to press enter and move past this question, and fills data with "unknown"
+        dLastDonateTemp = "Unknown";
+    }
+R15:    cout << "Username\t\t\t: "; getline(cin, dUnameTemp); if (dUnameTemp == "" || dUnameTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R15; }
+
+R16:    cout << "Password\t\t\t: "; getline(cin, dPwordTemp); if (dPwordTemp == "" || dPwordTemp == " ") { cout << endl << "Text Field is Empty!" << endl; goto R16; }
+
+    cout << endl << endl;
+    //donorEditFunc();
 }
 
 //Donor Login Function
@@ -993,6 +1293,61 @@ void donorWriteFunc() {
     file2.close();
 }
 
+
+//fstream& openAtLine(fstream& file,unsigned int num) {
+//    file.seekg(std::ios::beg);
+//    for (int i = 0; i < num - 1; ++i) {
+//        file.ignore(numeric_limits<streamsize>::max(), '\n');
+//    }
+//    return file;
+//}
+
+void donorEditFunc() {
+
+    string line;
+    donorInfo my_donor_info; //= Get_donor_info((lineFoundOn - 1), "DonorInfo.csv");
+    ifstream file;
+    //ofstream tempFile("DonorInfoTemp.csv");
+    file.open(donorFilePath, ios::in);
+    //tempFile.open("DonorInfoTemp.csv", ios::out);
+    bool firstNameCheck = InfoExists(my_donor_info.firstName, donorFilePath, First_Name); //int num1 = lineFoundOn - 1;
+    //bool lastNameCheck = InfoExists(my_donor_info.lastName, donorFilePath, last_name); int num2 = lineFoundOn - 1;
+    //bool usernameCheck = InfoExists(my_donor_info.username, donorFilePath, donor_username); int num3 = lineFoundOn - 1;
+    int lineCounter = 0;
+    int num1 = 10;
+    while (getline(file, line) && lineCounter != num1) {
+        lineCounter++;
+        
+        //tempFile << line << endl;
+        if (firstNameCheck && lineCounter == num1) {
+            //struct donorInfo donorEdit;
+            //file2 << donorEdit.firstName << ","; 
+            //file2 << donorEdit.lastName << ",";
+            //file2 << donorEdit.dob << ",";
+            //file2 << donorEdit.nationality << ",";
+            //file2 << donorEdit.ethnicity << ",";
+            //file2 << donorEdit.gender << ",";
+            //file2 << donorEdit.underlyCond << ",";
+            //file2 << donorEdit.bloodGroup << ",";
+            //file2 << "|" << donorEdit.contactNum << ",";
+            //file2 << donorEdit.emailAddr << ",";
+            //file2 << donorEdit.physAddr << ",";
+            //file2 << donorEdit.lastDonation << ",";
+            //file2 << donorEdit.username << ",";
+            //file2 << donorEdit.password << "\n";
+            //file2.close();
+            cout << endl << "If statement triggered" << endl;
+        }
+        else {
+            cout << endl << "ERROR" << endl;
+        }
+        
+    }
+
+    cout << endl << "Finished" << endl;
+
+} // This function currently throws an exception
+
 bool InfoExists(std::string target_info, string file_to_open, int where_to_look) {
 
     ifstream file;
@@ -1011,18 +1366,18 @@ bool InfoExists(std::string target_info, string file_to_open, int where_to_look)
         vector<string> values = split(line, ",");
         // the name is at index[1]            
         string info = values[where_to_look]; // the enum is one less then the column number
-        //passwordCorrect = values[where_to_look + 1];
+        
         // check info against the correct column
         if (info == target_info) {
             // if we find the info in the right place, clean up our resources
             // and return early
-            //cout << "Here is your info " << info2 << endl;
+            
             lineFoundOn = lineCounter;
             file.close();
             return true;
         }
     }
-    // otherwise we didn't find the user,
+    // otherwise we didn't find the info,
     // clean up our resources and return
     file.close();
     return false;
@@ -1158,19 +1513,12 @@ RegisterRestart:
 int main()
 {
     
-    //file1.open(recipientFilePath, ios::out);
-    //file1 << "Recipient Name,Physical Address,Email Address,Contact Number,Username,Password" << endl;
-    //file1.close();
-    //file2.open(donorFilePath, ios::out);
-    //file2 << "First Name,Last Name,Date of Birth,Nationality,Ethnicity,Gender,Underlying Conditions,Blood Group,Contact Number,Email Address,Physical Address,Date of Last Donation,Username,Password" << endl;
-    //file2.close();
-    //read_a_csv();
-    
+ 
     //recipientInfo my_recipient_info = Get_recipient_info(1, "Recipientinfo.csv");
 
     //cout << my_recipient_info.recipientName << " and " << my_recipient_info.emailAddr;
-
-    
+    //*fstream file("DonorInfo.csv");
+    //donorEditFunc();
     menuFunc();
 }
 

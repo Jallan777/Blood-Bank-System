@@ -1,2 +1,5 @@
 ﻿  NZ Blood Bank System.cpp
+C:\Users\jacob\OneDrive\Documents\GitHub\Blood-Bank-System\NZ Blood Bank System\NZ Blood Bank System\NZ Blood Bank System.cpp(460,13): warning C4101: 'onLine': unreferenced local variable
+C:\Users\jacob\OneDrive\Documents\GitHub\Blood-Bank-System\NZ Blood Bank System\NZ Blood Bank System\NZ Blood Bank System.cpp(466,14): warning C4101: 'bloodTypeExists': unreferenced local variable
+C:\Users\jacob\OneDrive\Documents\GitHub\Blood-Bank-System\NZ Blood Bank System\NZ Blood Bank System\NZ Blood Bank System.cpp(460,21): warning C4101: 'lineCompare': unreferenced local variable
   NZ Blood Bank System.vcxproj -> C:\Users\jacob\OneDrive\Documents\GitHub\Blood-Bank-System\NZ Blood Bank System\x64\Debug\NZ Blood Bank System.exe
