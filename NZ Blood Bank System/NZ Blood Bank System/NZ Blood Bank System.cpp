@@ -3,9 +3,9 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <vector>
-
 
 using namespace std;
 
@@ -16,7 +16,6 @@ string recipientFilePath = "RecipientInfo.csv";
 string donorFilePath = "DonorInfo.csv";
 string adminFilePath = "AdminInfo.csv";
 fstream file1, file2;
-
 
 enum donor_data_type{ 
     First_Name,
@@ -33,7 +32,6 @@ enum donor_data_type{
     last_date_of_donation,
     donor_username,
     donor_password };
-
 
 enum recip_data_type{
 
@@ -105,12 +103,15 @@ void findAndReplace(string& data, string toSearch, string replaceWith) {
     }
 }
 
-//bool findFunc(string& data, string toSearch) {
-//    size_t pos = data.find(toSearch);
-//    while (pos != std::string::npos) {
-//
-//    }
-//}
+void findFunc(string& data, string toFind) {
+    
+    size_t pos = data.find(toFind);
+    int tempPlace = pos;
+    while (pos != string::npos) {
+        pos = data.find(toFind, pos + 1);
+    }
+    
+}
 
 // for string delimiter                                                      <---- copied from stack overflow https://stackoverflow.com/questions/14265581/parse-split-a-string-in-c-using-string-delimiter-standard-c
 vector<string> split(string s, string delimiter) {
@@ -615,11 +616,82 @@ void recipFrontPage() {
         recipFrontPage();
     }
     else if (recipMenuChoice == "2") {
-        //See donors by location and blood group TODO
-        // -needs csv searcher
+
+        string locationKey, bloodKey, bloodSearchOption;
         cout << endl << "Donors by Location & Blood Type" << endl;
-        cout << "Press Enter to Return" << endl; cin.ignore();
-        recipFrontPage();
+        lineFunc(40, "*");
+        cout << endl << endl;
+        cout << "Please input the Location you wish to search for" << endl;
+        cout << "(Search a City Name for best results)" << endl << endl;
+        cout << "\tLocation: "; cin >> locationKey; cin.ignore();
+    BloodAskRestart:
+        cout << endl << "\tSelect Blood Group: " << endl << endl;
+        cout << "\t[1] Type A" << "\t[2]Type B" << endl << "\t[3]Type AB" << "\t [4]Type O" << endl << endl;
+        cout << "Please Select an Option: "; getline(cin, bloodSearchOption);
+        if (bloodSearchOption == "1") {
+            bloodKey = "A";
+        }
+        else if (bloodSearchOption == "2") {
+            bloodKey = "B";
+        }
+        else if (bloodSearchOption == "3") {
+            bloodKey = "AB";
+        }
+        else if (bloodSearchOption == "4") {
+            bloodKey = "O";
+        }
+        else {
+            cout << endl << "Please Select a Valid Option" << endl;
+            goto BloodAskRestart;
+        }
+        ifstream file;
+        std::string line;
+        int lineCounter = 0;
+        file.open(donorFilePath, std::ios::in);
+        while (std::getline(file, line)) {
+            lineCounter++;
+        }
+        int donorOnLine = lineCounter;
+
+        for (int i = 1; i < donorOnLine; i++) {
+            if (i == donorOnLine - 1) {
+                cout << endl << endl << "That is all the registered donors!" << endl;
+                recipFrontPage();
+            }
+            donorInfo my_donor_info = Get_donor_info((i), "DonorInfo.csv");
+            string tempAddr = my_donor_info.physAddr;
+            
+            ////Crete object of istringstream and initialize assign input string
+            //istringstream iss(tempAddr);
+
+            //string word;
+            ////Extract each words only..no spaces. This way it can handle any special characters.
+
+            //while (iss >> word) {
+            //    if (word == locationKey) {
+            //        cout << word.c_str() << endl;
+            //    }
+            //        //Display words
+            //        //cout << word.c_str() << endl;
+            //}
+            if (my_donor_info.bloodGroup == bloodKey) {
+                cout << "Donors with Blood Type " << bloodKey << " in the location: " << locationKey << endl;
+                lineFunc(40, "*");
+                cout << endl << endl;
+                cout << "Full Name\t: " << my_donor_info.firstName << " " << my_donor_info.lastName << endl;
+                cout << "Date of Birth\t: " << my_donor_info.dob << endl;
+                cout << "Blood Group\t: " << my_donor_info.bloodGroup << endl;
+                cout << "Date of Last Donation: " << my_donor_info.lastDonation << endl;
+                cout << "Known Underlying Conditions: " << my_donor_info.underlyCond << endl << endl;
+                cout << "Gender\t\t: " << my_donor_info.gender << endl;
+                cout << "Nationality\t: " << my_donor_info.nationality << endl;
+                cout << "Ethnicity\t: " << my_donor_info.ethnicity << endl << endl;
+
+                cout << endl << endl << "Press Enter to View Next Donor..."; cin.ignore();
+            }
+
+            file.close();
+        }
     }
     else if (recipMenuChoice == "3") {
         string firstNameSearch, lastNameSearch, firstLine, secondLine;
