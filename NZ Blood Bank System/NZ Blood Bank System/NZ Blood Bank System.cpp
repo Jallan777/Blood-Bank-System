@@ -1582,6 +1582,115 @@ RegisterRestart:
 }
 
 
+//booking functions
+
+bool is_slot_avavilable(int data_row_num) { // data row num will come from user input
+
+    ifstream file;
+    std::string line;
+    bool isHeader = true;
+    int row_counter = 0;
+
+    
+
+    file.open("bookings.csv", std::ios::in);
+    while (std::getline(file, line)) {
+        // this is the CSV header so skip it      
+        if (isHeader) {
+            isHeader = false;
+            continue;
+        }
+        row_counter++; // make sure we are only looking at the desired row
+
+        if (data_row_num == row_counter) {
+
+
+            // split the CSV line into an array
+            // check the availability column and if the slot is available return true. if its not return false
+            vector<string> values = split(line, ",");
+
+
+            file.close();
+            
+            if (values[2] == "yes") {
+                return true;
+            }
+            else {
+                return false;
+            }
+
+            
+            
+        }
+
+    } file.close(); return false;
+
+    
+}
+
+
+void book_slot_if_available(int data_row_num){
+    ifstream file;
+    std::string line;
+    bool isHeader = true;
+    int row_counter = 0;
+
+
+
+    file.open("bookings.csv", std::ios::in); // TODO open in write mode and change the yes to a no
+    while (std::getline(file, line)) {
+        // this is the CSV header so skip it      
+        if (isHeader) {
+            isHeader = false;
+            continue;
+        }
+        row_counter++; // make sure we are only looking at the desired row
+
+        if (data_row_num == row_counter) {
+
+
+           //edit the yes in the CSV to a no
+            
+        
+
+
+
+        }
+
+    } file.close(); return false;
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 int main()
 {
     
