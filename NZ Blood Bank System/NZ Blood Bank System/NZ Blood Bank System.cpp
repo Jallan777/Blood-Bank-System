@@ -1657,7 +1657,7 @@ void book_slot_if_available(int data_row_num){
 
         }
 
-    } file.close(); return false;
+    } file.close(); //return false;
 
 
 
