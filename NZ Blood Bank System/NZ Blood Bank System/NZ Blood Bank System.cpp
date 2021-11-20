@@ -1,12 +1,15 @@
 // NZ Blood Bank System.cpp : This file contains the 'main' function. Program execution begins and ends there.
 // Introduction Screen
 
+#pragma warning(disable : 4996)
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <vector>
-
+#include <ctime>
+#include <chrono>
+#include <regex>
 using namespace std;
 
 int lineFoundOn, unameLine, pwordLine, sameLineCheck;
@@ -86,7 +89,6 @@ void menuFunc();
 bool InfoExists(std::string target_info, string file_to_open, int where_to_look);
 void donorEditFunc();
 
-
 //Simple Function to write a line of variable length, with any character
 void lineFunc(int length, string type) {
     for (int i = 0; i < length; i++)
@@ -103,15 +105,6 @@ void findAndReplace(string& data, string toSearch, string replaceWith) {
     }
 }
 
-void findFunc(string& data, string toFind) {
-    
-    size_t pos = data.find(toFind);
-    int tempPlace = pos;
-    while (pos != string::npos) {
-        pos = data.find(toFind, pos + 1);
-    }
-    
-}
 
 // for string delimiter                                                      <---- copied from stack overflow https://stackoverflow.com/questions/14265581/parse-split-a-string-in-c-using-string-delimiter-standard-c
 vector<string> split(string s, string delimiter) {
@@ -226,7 +219,7 @@ donorInfo Get_donor_info(int data_row_num, string file_to_open) {
     return info_to_return;
 }
 
-// get admin info() TODO
+
 
 
 //Donor Post-Login Screen
@@ -440,13 +433,11 @@ void donorFrontPage() {             //Landing page after Donor has logged in
 void recipFrontPage() {
     string recipMenuChoice, bloodOnlySearch, locationBloodSearch;
     recipientInfo my_recipient_info = Get_recipient_info((lineFoundOn - 1), "Recipientinfo.csv");
-    //TODO menu with options to:
-    //-see donor info by blood group (read csv and find n amount of people based if blood group the same)
-    //-access donors by location and blood group (same as above, but including location too)
-    //-find potential donor contact details by giving full name (again, look for specific name in csv and display corresponding details)
+    //TODO -access donors by location and blood group (same as above, but including location too)
+    
     
     //Formatting
-    cout << endl << "\tWelcome " << my_recipient_info.recipientName << endl;     //TODO get Name of recipient from csv and display
+    cout << endl << "\tWelcome " << my_recipient_info.recipientName << endl;     
     lineFunc(40, "*");
     cout << endl << endl;
     cout << "[1] See Donors by Blood Group" << endl;
@@ -455,16 +446,15 @@ void recipFrontPage() {
     cout << "[4] Logout & Return to Menu" << endl << endl;
     cout << "Please Select an Option: "; getline(cin, recipMenuChoice);
     if (recipMenuChoice == "1") {
-        //See donors by blood group TODO
-        // -needs csv searcher
+
     BloodSearchRestart:
-        int onLine, lineCompare;
+
         cout << endl << "\tDonors by Blood Type" << endl;
         lineFunc(36, "*");
         cout << endl << "\tSelect Blood Group: " << endl << endl;
         cout << "\t[1] Type A" << "\t[2]Type B" << endl << "\t[3]Type AB" << "\t [4]Type O" << endl << endl;
         cout << "Please Select an Option: "; getline(cin, bloodOnlySearch);
-        bool bloodTypeExists;
+
         string bloodSearchKey;
         ifstream file;
         std::string line;
@@ -644,54 +634,61 @@ void recipFrontPage() {
             cout << endl << "Please Select a Valid Option" << endl;
             goto BloodAskRestart;
         }
+
         ifstream file;
         std::string line;
         int lineCounter = 0;
         file.open(donorFilePath, std::ios::in);
+        bool foundLocation = false;
         while (std::getline(file, line)) {
             lineCounter++;
         }
         int donorOnLine = lineCounter;
 
         for (int i = 1; i < donorOnLine; i++) {
-            if (i == donorOnLine - 1) {
+            if (i == donorOnLine) {
                 cout << endl << endl << "That is all the registered donors!" << endl;
                 recipFrontPage();
             }
             donorInfo my_donor_info = Get_donor_info((i), "DonorInfo.csv");
-            string tempAddr = my_donor_info.physAddr;
             
-            ////Crete object of istringstream and initialize assign input string
-            //istringstream iss(tempAddr);
-
-            //string word;
-            ////Extract each words only..no spaces. This way it can handle any special characters.
-
-            //while (iss >> word) {
-            //    if (word == locationKey) {
-            //        cout << word.c_str() << endl;
-            //    }
-            //        //Display words
-            //        //cout << word.c_str() << endl;
-            //}
             if (my_donor_info.bloodGroup == bloodKey) {
-                cout << "Donors with Blood Type " << bloodKey << " in the location: " << locationKey << endl;
-                lineFunc(40, "*");
-                cout << endl << endl;
-                cout << "Full Name\t: " << my_donor_info.firstName << " " << my_donor_info.lastName << endl;
-                cout << "Date of Birth\t: " << my_donor_info.dob << endl;
-                cout << "Blood Group\t: " << my_donor_info.bloodGroup << endl;
-                cout << "Date of Last Donation: " << my_donor_info.lastDonation << endl;
-                cout << "Known Underlying Conditions: " << my_donor_info.underlyCond << endl << endl;
-                cout << "Gender\t\t: " << my_donor_info.gender << endl;
-                cout << "Nationality\t: " << my_donor_info.nationality << endl;
-                cout << "Ethnicity\t: " << my_donor_info.ethnicity << endl << endl;
+                string tempAddress = my_donor_info.physAddr;
+                findAndReplace(tempAddress, "/", " , ");
+                //cout << endl << tempAddress;
+                if (tempAddress.find(locationKey) != string::npos) {
+                    cout << endl << "Donors " << " with Blood Type " << bloodKey << " matching search: " << locationKey << endl;
+                    lineFunc(50, "*");
+                    cout << endl << endl;
+                    cout << "Full Name\t: " << my_donor_info.firstName << " " << my_donor_info.lastName << endl;
+                    cout << "Date of Birth\t: " << my_donor_info.dob << endl;
+                    cout << "Blood Group\t: " << my_donor_info.bloodGroup << endl;
+                    cout << "Date of Last Donation: " << my_donor_info.lastDonation << endl;
+                    cout << "Known Underlying Conditions: " << my_donor_info.underlyCond << endl << endl;
+                    cout << "Gender\t\t: " << my_donor_info.gender << endl;
+                    cout << "Nationality\t: " << my_donor_info.nationality << endl;
+                    cout << "Ethnicity\t: " << my_donor_info.ethnicity << endl << endl;
+                    string printAddress = my_donor_info.physAddr;
+                    findAndReplace(printAddress, "/", ", ");
+                    cout << "Physical Address: " << printAddress << endl << endl;
+                    lineFunc(50, "*");
 
-                cout << endl << endl << "Press Enter to View Next Donor..."; cin.ignore();
+                    cout << endl << endl << "Press Enter to View Next Donor..."; cin.ignore();
+                }
+
+
+
+
             }
-
-            file.close();
+            
+           
         }
+
+        cout << endl << endl << "There are no more Donors in Blood Group " << bloodKey << " matching search: " << locationKey;
+        file.close();
+        cout << endl << endl << "Press Enter to return to Recipient Menu..."; cin.ignore();
+        recipFrontPage();
+
     }
     else if (recipMenuChoice == "3") {
         string firstNameSearch, lastNameSearch, firstLine, secondLine;
@@ -804,10 +801,10 @@ void adminFrontPage() {
             int adViewCounter = lineCounter;
 
             for (int i = 1; i < adViewCounter; i++) {
-                if (i == adViewCounter  - 1) {
-                    cout << endl << endl << "That is all the registered donors!" << endl;
-                    adminFrontPage();
-                }
+                //if (i == adViewCounter  - 1) {
+                //    cout << endl << endl << "That is all the registered donors!" << endl;
+                //    adminFrontPage();
+                //}
                     donorInfo my_donor_info = Get_donor_info((i), "DonorInfo.csv");
                     cout << endl << my_donor_info.firstName << " " << my_donor_info.lastName << " Information" << endl;
                     lineFunc(50, "*");
@@ -824,15 +821,19 @@ void adminFrontPage() {
 
                     cout << "Blood Group\t\t\t: " << my_donor_info.bloodGroup << endl;
                     cout << "Known Underlying Conditions\t: " << my_donor_info.underlyCond << endl;
-                    cout << "Contact Number\t\t\t: " << my_donor_info.contactNum.erase(0, 1) << endl;
-                    cout << "Email Address\t\t\t: " << my_donor_info.emailAddr << endl << endl;
+                    cout << "Date of Last Dontaion\t\t: " << my_donor_info.lastDonation << endl << endl;
 
+                    cout << "Contact Number\t\t\t: " << my_donor_info.contactNum.erase(0, 1) << endl;
+                    cout << "Email Address\t\t\t: " << my_donor_info.emailAddr << endl;
                     cout << "Username\t\t\t: " << my_donor_info.username << endl;
                     cout << "Password\t\t\t: " << my_donor_info.password << endl << endl;
 
                     cout << endl << endl << "Press Enter to View Next Donor..."; cin.ignore();
             }
+            cout << endl << endl << "That is all the registered donors!" << endl;
             file.close();
+            cout << endl << "Press Enter to Return to Admin Menu..."; cin.ignore();
+            adminFrontPage();
         }
         else if (adminInfoChoice == "2") {
             cin.ignore();
@@ -872,6 +873,7 @@ void adminFrontPage() {
             }
             cout << endl << "That is all the registered recipients!" << endl;
             file.close();
+            cout << endl << "Press Enter to Return to Admin Menu..."; cin.ignore();
             adminFrontPage();
         }
         
@@ -888,16 +890,455 @@ void adminFrontPage() {
         //Update Donor Blood Test Reports TODO
     }
     else if(adminMenuChoice == "3") { 
-        //Donor Report TODO
+        //Donor Report
+        cin.ignore();
+        cout << endl << "Donor Summary: " << endl << endl;
+
+        ifstream file;
+        std::string line;
+        int lineCounter = 0, donorAmount = 0, undCondNum = 0, numMales = 0, numFemales = 0;
+        file.open(donorFilePath, std::ios::in);
+        while (std::getline(file, line)) {
+            lineCounter++;
+        }
+        int adViewCounter = lineCounter;
+
+        for (int i = 1; i < adViewCounter; i++) {
+            donorAmount++;
+
+            donorInfo my_donor_info = Get_donor_info((i), "DonorInfo.csv");
+            
+            lineFunc(50, "*");
+            cout << endl << "\tDonor: " << my_donor_info.firstName << " " << my_donor_info.lastName << endl;
+            cout << "\tBlood Group: " << my_donor_info.bloodGroup << "\t\tLast Donation: " << my_donor_info.lastDonation << endl;
+            cout << "\tGender: " << my_donor_info.gender << "\t\tDate of Birth: " << my_donor_info.dob << endl;
+            lineFunc(50, "*");
+            
+            if (my_donor_info.underlyCond != "None") { undCondNum++; }
+            if (my_donor_info.gender == "Male" || my_donor_info.gender == "M" || my_donor_info.gender == "m" || my_donor_info.gender == "male") { numMales++; }
+            if (my_donor_info.gender == "Female" || my_donor_info.gender == "female" || my_donor_info.gender == "F" || my_donor_info.gender == "f") { numFemales++; }
+
+            cout << endl << endl << "Press Enter to View Next Donor..."; cin.ignore();
+
+        }
+        file.close();
+        lineFunc(50, "*");
+
+        cout << endl << "\tDonor Report" << endl << endl;
+        cout << "Number of Male Donors: " << numMales << endl;
+        cout << "Number of Female Donors: " << numFemales << endl;
+        cout << "Number of Donors with Known Underlying Conditions: " << undCondNum << endl << endl;
+        cout << "Total Number of Donors: " << donorAmount << endl;
+
+        cout << "That is all the registered donors!" << endl;
+        cout << "(Scroll Up to Review Accounts)";
+        cout << endl << endl;
+        cout << "Press Enter to Return to Admin Menu..."; cin.ignore();
+
+
+        adminFrontPage();
     }
     else if(adminMenuChoice == "4") { 
-        //Recipient Report TODO
+        //Recipient Report 
+        cin.ignore();
+        cout << endl << "Recipient Summary: " << endl << endl;
+
+        ifstream file;
+        std::string line;
+        int lineCounter = 0, recipCounter = 0, isValidated = 0;
+        file.open(recipientFilePath, std::ios::in);
+        while (std::getline(file, line)) {
+            lineCounter++;
+        }
+        int adViewCounter = lineCounter;
+
+        for (int i = 1; i < adViewCounter; i++) {
+            recipCounter++;
+            recipientInfo my_recipient_info = Get_recipient_info((i), "RecipientInfo.csv");
+            cout << endl << endl;
+            lineFunc(50, "*");
+            cout << endl << "\tRecipient Name: " << my_recipient_info.recipientName << endl << endl;
+            cout << "Validated: " << my_recipient_info.validated << endl;
+            cout << "Contact Number: " << my_recipient_info.contactNum.erase(0, 1) << endl;
+            if (my_recipient_info.validated != "No") { isValidated++; }
+            lineFunc(50, "*");
+            
+                        
+            
+        }
+
+        cout << endl << "\tRecipient Report" << endl;
+        lineFunc(50, "*");
+        cout << endl << endl << "Number of Validated Recipients: " << isValidated << endl;
+        cout << "Total Number of Recipients: " << recipCounter << endl;
+        cout << endl << "That is all the registered recipients!" << endl;
+        cout << "(Scroll Up Review Recipient Accounts)" << endl;
+        file.close();
+        cout << endl << "Press Enter to Return to Admin Menu..."; cin.ignore();
+        adminFrontPage();
     }
     else if(adminMenuChoice == "5") {
         //Location Based Report TODO
+        string locationKey;
+        cout << endl << "Location Based Report" << endl;
+        lineFunc(40, "*");
+        cout << endl << endl;
+        cout << "Please input the Location you wish to search for" << endl;
+        cout << "(Search a City Name for best results)" << endl << endl;
+        cout << "\tLocation: "; cin >> locationKey; cin.ignore();
+        
+        ifstream file, fileSecond;
+        string line, lineSecond;
+        int lineCounter = 0, totalCounter = 0, donorCount = 0, recipCount = 0;
+        file.open(donorFilePath, std::ios::in);
+        while (std::getline(file, line)) {
+            lineCounter++;
+        }
+        int donorOnLine = lineCounter;
+        
+        for (int i = 1; i < donorOnLine; i++) {
+            if (i == donorOnLine) {
+                cout << endl << endl << "That is all the registered donors!" << endl;
+                adminFrontPage();
+            }
+            donorInfo my_donor_info = Get_donor_info((i), "DonorInfo.csv");
+            string tempAddress = my_donor_info.physAddr;
+            findAndReplace(tempAddress, "/", " , ");
+            //cout << endl << tempAddress;
+            if (tempAddress.find(locationKey) != string::npos) {
+                cout << endl << "Accounts matching:  " << locationKey << endl;
+                lineFunc(50, "*");
+                cout << endl << endl;
+                cout << "Name\t: " << my_donor_info.firstName << " " << my_donor_info.lastName << endl << endl;
+                cout << "Account Type: Donor" << endl;
+                cout << "Contact Number\t: " << my_donor_info.contactNum.erase(0, 1) << endl;
+                cout << "Email Address\t: " << my_donor_info.emailAddr << endl << endl;
+                string printAddress = my_donor_info.physAddr;
+                findAndReplace(printAddress, "/", ", ");
+                cout << "Physical Address: " << printAddress << endl << endl;
+                lineFunc(50, "*");
+                donorCount++;
+                cout << endl << "Press Enter for Next Account..."; cin.ignore();
+            }
+        }
+        lineCounter = 0;
+        fileSecond.open(recipientFilePath, std::ios::in);
+        while (std::getline(fileSecond, lineSecond)) {
+            lineCounter++;
+        }
+        int recipOnLine = lineCounter;
+        
+        for (int j = 1; j < recipOnLine; j++) {
+            if (j == recipOnLine) {
+                cout << endl << endl << "That is all the registered donors!" << endl;
+                adminFrontPage();
+            }
+            recipientInfo my_recipient_info = Get_recipient_info((j), "RecipientInfo.csv");
+            string tempAddress = my_recipient_info.physAddr;
+            findAndReplace(tempAddress, "/", " , ");
+            //cout << endl << tempAddress;
+            if (tempAddress.find(locationKey) != string::npos) {
+                cout << endl << "Accounts matching: '" << locationKey << "'" << endl;
+                lineFunc(50, "*");
+                cout << endl << endl;
+                cout << "Full Name\t: " << my_recipient_info.recipientName << endl << endl;
+                cout << "Account Type: Recipient" << endl;
+                cout << "Contact Number\t: " << my_recipient_info.contactNum.erase(0, 1) << endl;
+                cout << "Email Address\t: " << my_recipient_info.emailAddr << endl << endl;
+                string printAddress = my_recipient_info.physAddr;
+                findAndReplace(printAddress, "/", ", ");
+                cout << "Physical Address: " << printAddress << endl << endl;
+                lineFunc(50, "*");
+                recipCount++;
+                cout << endl << "Press Enter for Next Account..."; cin.ignore();
+            }
+
+        }
+        
+        cout << endl << endl << "There are no more Accounts matching search: \"" << locationKey << "\"";
+        file.close();
+        fileSecond.close();
+        totalCounter = donorCount + recipCount;
+        cout << endl << endl;
+        cout << "Number of Donor Accounts: " << donorCount << endl;
+        cout << "Number of Recipient Accounts: " << recipCount << endl << endl;
+        cout << "Total Number of Accounts matching search: " << totalCounter << endl;
+        cout << endl << "Press Enter to return to Admin Menu..."; cin.ignore();
+        adminFrontPage();
+
     }
     else if (adminMenuChoice == "6") {
-        //Location Based Report TODO
+    cin.ignore();
+    string bloodOnlySearch, bloodKey, viewAccounts;
+        //Blood Group Based Report 
+    BloodSearchRestart:
+
+        cout << endl << "\tAccounts by Blood Type" << endl;
+        lineFunc(36, "*");
+        cout << endl << "\tSelect Blood Group: " << endl << endl;
+        cout << "\t[1] Type A" << "\t[2] Type B" << endl << "\t[3] Type AB" << "\t[4] Type O" << endl << endl;
+        cout << "Please Select an Option: "; getline(cin, bloodOnlySearch);
+        if (bloodOnlySearch == "1") {
+            bloodKey = "A";
+            ifstream file;
+            std::string line;
+            int lineCounter = 0, accountCounter = 0, undCondNum = 0, numMales = 0, numFemales = 0;
+            file.open(donorFilePath, std::ios::in);
+            while (std::getline(file, line)) {
+                lineCounter++;
+            }
+            int adViewCounter = lineCounter;
+
+            for (int i = 1; i < adViewCounter; i++) {
+
+                
+                donorInfo my_donor_info = Get_donor_info((i), "DonorInfo.csv");
+                
+                if (my_donor_info.bloodGroup == bloodKey) {
+                    accountCounter++;
+                    cout << endl << my_donor_info.firstName << " " << my_donor_info.lastName << " Information" << endl;
+                    lineFunc(50, "*");
+                    cout << endl << endl;
+                    cout << "Full Name\t: " << my_donor_info.firstName << " " << my_donor_info.lastName << endl;
+                    string physAddrTemp = my_donor_info.physAddr;
+                    findAndReplace(physAddrTemp, "/", ", ");
+                    cout << "Physical Address\t\t: " << physAddrTemp << endl << endl;
+
+                    cout << "Date of Birth\t\t\t: " << my_donor_info.dob << endl;
+                    cout << "Nationality\t\t\t: " << my_donor_info.nationality << endl;
+                    cout << "Ethnicity\t\t\t: " << my_donor_info.ethnicity << endl;
+                    cout << "Gender\t\t\t\t: " << my_donor_info.gender << endl << endl;
+
+                    cout << "Blood Group\t\t\t: " << my_donor_info.bloodGroup << endl;
+                    cout << "Known Underlying Conditions\t: " << my_donor_info.underlyCond << endl;
+                    cout << "Date of Last Dontaion\t\t: " << my_donor_info.lastDonation << endl << endl;
+
+                    cout << "Contact Number\t\t\t: " << my_donor_info.contactNum.erase(0, 1) << endl;
+                    cout << "Email Address\t\t\t: " << my_donor_info.emailAddr << endl;
+                    cout << "Username\t\t\t: " << my_donor_info.username << endl;
+                    cout << "Password\t\t\t: " << my_donor_info.password << endl << endl;
+
+                    if (my_donor_info.underlyCond != "None") { undCondNum++; }
+                    if (my_donor_info.gender == "Male" || my_donor_info.gender == "M" || my_donor_info.gender == "m" || my_donor_info.gender == "male") { numMales++; }
+                    if (my_donor_info.gender == "Female" || my_donor_info.gender == "female" || my_donor_info.gender == "F" || my_donor_info.gender == "f") { numFemales++; }
+
+                    cout << "Press Enter for Next Account..."; cin.ignore();
+                    
+                }
+                
+                
+            }
+            cout << endl << "Blood Group Based Report" << endl;
+            lineFunc(55, "*");
+            cout << endl;
+            cout << "Number of Accounts with Known Underlying Conditions: " << undCondNum << endl;
+            cout << "Number of Males: " << numMales << endl;
+            cout << "Number of Females: " << numFemales << endl;
+            cout << endl << "Total Number of Accounts in Blood Group " << bloodKey << ": " << accountCounter << endl;
+
+            lineFunc(55, "*");
+            cout << endl << endl << "Report Completed" << endl;
+            cout << "(Scroll Up to Review Accounts)" << endl;
+            cout << "Press Enter to Return to Admin Menu..."; cin.ignore();
+            adminFrontPage();
+        }
+        else if (bloodOnlySearch == "2") {
+            bloodKey = "B";
+            ifstream file;
+            std::string line;
+            int lineCounter = 0, accountCounter = 0, undCondNum = 0, numMales = 0, numFemales = 0;
+            file.open(donorFilePath, std::ios::in);
+            while (std::getline(file, line)) {
+                lineCounter++;
+            }
+            int adViewCounter = lineCounter;
+
+            for (int i = 1; i < adViewCounter; i++) {
+
+
+                donorInfo my_donor_info = Get_donor_info((i), "DonorInfo.csv");
+
+                if (my_donor_info.bloodGroup == bloodKey) {
+                    accountCounter++;
+                    cout << endl << my_donor_info.firstName << " " << my_donor_info.lastName << " Information" << endl;
+                    lineFunc(50, "*");
+                    cout << endl << endl;
+                    cout << "Full Name\t: " << my_donor_info.firstName << " " << my_donor_info.lastName << endl;
+                    string physAddrTemp = my_donor_info.physAddr;
+                    findAndReplace(physAddrTemp, "/", ", ");
+                    cout << "Physical Address\t\t: " << physAddrTemp << endl << endl;
+
+                    cout << "Date of Birth\t\t\t: " << my_donor_info.dob << endl;
+                    cout << "Nationality\t\t\t: " << my_donor_info.nationality << endl;
+                    cout << "Ethnicity\t\t\t: " << my_donor_info.ethnicity << endl;
+                    cout << "Gender\t\t\t\t: " << my_donor_info.gender << endl << endl;
+
+                    cout << "Blood Group\t\t\t: " << my_donor_info.bloodGroup << endl;
+                    cout << "Known Underlying Conditions\t: " << my_donor_info.underlyCond << endl;
+                    cout << "Date of Last Dontaion\t\t: " << my_donor_info.lastDonation << endl << endl;
+
+                    cout << "Contact Number\t\t\t: " << my_donor_info.contactNum.erase(0, 1) << endl;
+                    cout << "Email Address\t\t\t: " << my_donor_info.emailAddr << endl;
+                    cout << "Username\t\t\t: " << my_donor_info.username << endl;
+                    cout << "Password\t\t\t: " << my_donor_info.password << endl << endl;
+
+                    if (my_donor_info.underlyCond != "None") { undCondNum++; }
+                    if (my_donor_info.gender == "Male" || my_donor_info.gender == "M" || my_donor_info.gender == "m" || my_donor_info.gender == "male") { numMales++; }
+                    if (my_donor_info.gender == "Female" || my_donor_info.gender == "female" || my_donor_info.gender == "F" || my_donor_info.gender == "f") { numFemales++; }
+
+                    cout << "Press Enter for Next Account..."; cin.ignore();
+
+                }
+
+
+            }
+            cout << endl << "Blood Group Based Report" << endl;
+            lineFunc(55, "*");
+            cout << endl;
+            cout << "Number of Accounts with Known Underlying Conditions: " << undCondNum << endl;
+            cout << "Number of Males: " << numMales << endl;
+            cout << "Number of Females: " << numFemales << endl;
+            cout << endl << "Total Number of Accounts in Blood Group " << bloodKey << ": " << accountCounter << endl;
+
+            lineFunc(55, "*");
+            cout << endl << endl << "Report Completed" << endl;
+            cout << "(Scroll Up to Review Accounts)" << endl;
+            cout << "Press Enter to Return to Admin Menu..."; cin.ignore();
+            adminFrontPage();
+        }
+        else if (bloodOnlySearch == "3") {
+            bloodKey = "AB";
+            ifstream file;
+            std::string line;
+            int lineCounter = 0, accountCounter = 0, undCondNum = 0, numMales = 0, numFemales = 0;
+            file.open(donorFilePath, std::ios::in);
+            while (std::getline(file, line)) {
+                lineCounter++;
+            }
+            int adViewCounter = lineCounter;
+
+            for (int i = 1; i < adViewCounter; i++) {
+
+
+                donorInfo my_donor_info = Get_donor_info((i), "DonorInfo.csv");
+
+                if (my_donor_info.bloodGroup == bloodKey) {
+                    accountCounter++;
+                    cout << endl << my_donor_info.firstName << " " << my_donor_info.lastName << " Information" << endl;
+                    lineFunc(50, "*");
+                    cout << endl << endl;
+                    cout << "Full Name\t: " << my_donor_info.firstName << " " << my_donor_info.lastName << endl;
+                    string physAddrTemp = my_donor_info.physAddr;
+                    findAndReplace(physAddrTemp, "/", ", ");
+                    cout << "Physical Address\t\t: " << physAddrTemp << endl << endl;
+
+                    cout << "Date of Birth\t\t\t: " << my_donor_info.dob << endl;
+                    cout << "Nationality\t\t\t: " << my_donor_info.nationality << endl;
+                    cout << "Ethnicity\t\t\t: " << my_donor_info.ethnicity << endl;
+                    cout << "Gender\t\t\t\t: " << my_donor_info.gender << endl << endl;
+
+                    cout << "Blood Group\t\t\t: " << my_donor_info.bloodGroup << endl;
+                    cout << "Known Underlying Conditions\t: " << my_donor_info.underlyCond << endl;
+                    cout << "Date of Last Dontaion\t\t: " << my_donor_info.lastDonation << endl << endl;
+
+                    cout << "Contact Number\t\t\t: " << my_donor_info.contactNum.erase(0, 1) << endl;
+                    cout << "Email Address\t\t\t: " << my_donor_info.emailAddr << endl;
+                    cout << "Username\t\t\t: " << my_donor_info.username << endl;
+                    cout << "Password\t\t\t: " << my_donor_info.password << endl << endl;
+
+                    if (my_donor_info.underlyCond != "None") { undCondNum++; }
+                    if (my_donor_info.gender == "Male" || my_donor_info.gender == "M" || my_donor_info.gender == "m" || my_donor_info.gender == "male") { numMales++; }
+                    if (my_donor_info.gender == "Female" || my_donor_info.gender == "female" || my_donor_info.gender == "F" || my_donor_info.gender == "f") { numFemales++; }
+
+                    cout << "Press Enter for Next Account..."; cin.ignore();
+
+                }
+
+
+            }
+            cout << endl << "Blood Group Based Report" << endl;
+            lineFunc(55, "*");
+            cout << endl;
+            cout << "Number of Accounts with Known Underlying Conditions: " << undCondNum << endl;
+            cout << "Number of Males: " << numMales << endl;
+            cout << "Number of Females: " << numFemales << endl;
+            cout << endl << "Total Number of Accounts in Blood Group " << bloodKey << ": " << accountCounter << endl;
+
+            lineFunc(55, "*");
+            cout << endl << endl << "Report Completed" << endl;
+            cout << "(Scroll Up to Review Accounts)" << endl;
+            cout << "Press Enter to Return to Admin Menu..."; cin.ignore();
+            adminFrontPage();
+        }
+        else if (bloodOnlySearch == "4") {
+            bloodKey = "O";
+            ifstream file;
+            std::string line;
+            int lineCounter = 0, accountCounter = 0, undCondNum = 0, numMales = 0, numFemales = 0;
+            file.open(donorFilePath, std::ios::in);
+            while (std::getline(file, line)) {
+                lineCounter++;
+            }
+            int adViewCounter = lineCounter;
+
+            for (int i = 1; i < adViewCounter; i++) {
+
+
+                donorInfo my_donor_info = Get_donor_info((i), "DonorInfo.csv");
+
+                if (my_donor_info.bloodGroup == bloodKey) {
+                    accountCounter++;
+                    cout << endl << my_donor_info.firstName << " " << my_donor_info.lastName << " Information" << endl;
+                    lineFunc(50, "*");
+                    cout << endl << endl;
+                    cout << "Full Name\t: " << my_donor_info.firstName << " " << my_donor_info.lastName << endl;
+                    string physAddrTemp = my_donor_info.physAddr;
+                    findAndReplace(physAddrTemp, "/", ", ");
+                    cout << "Physical Address\t\t: " << physAddrTemp << endl << endl;
+
+                    cout << "Date of Birth\t\t\t: " << my_donor_info.dob << endl;
+                    cout << "Nationality\t\t\t: " << my_donor_info.nationality << endl;
+                    cout << "Ethnicity\t\t\t: " << my_donor_info.ethnicity << endl;
+                    cout << "Gender\t\t\t\t: " << my_donor_info.gender << endl << endl;
+
+                    cout << "Blood Group\t\t\t: " << my_donor_info.bloodGroup << endl;
+                    cout << "Known Underlying Conditions\t: " << my_donor_info.underlyCond << endl;
+                    cout << "Date of Last Dontaion\t\t: " << my_donor_info.lastDonation << endl << endl;
+
+                    cout << "Contact Number\t\t\t: " << my_donor_info.contactNum.erase(0, 1) << endl;
+                    cout << "Email Address\t\t\t: " << my_donor_info.emailAddr << endl;
+                    cout << "Username\t\t\t: " << my_donor_info.username << endl;
+                    cout << "Password\t\t\t: " << my_donor_info.password << endl << endl;
+
+                    if (my_donor_info.underlyCond != "None") { undCondNum++; }
+                    if (my_donor_info.gender == "Male" || my_donor_info.gender == "M" || my_donor_info.gender == "m" || my_donor_info.gender == "male") { numMales++; }
+                    if (my_donor_info.gender == "Female" || my_donor_info.gender == "female" || my_donor_info.gender == "F" || my_donor_info.gender == "f") { numFemales++; }
+
+                    cout << "Press Enter for Next Account..."; cin.ignore();
+
+                }
+
+
+            }
+            cout << endl << "Blood Group Based Report" << endl;
+            lineFunc(55, "*");
+            cout << endl;
+            cout << "Number of Accounts with Known Underlying Conditions: " << undCondNum << endl;
+            cout << "Number of Males: " << numMales << endl;
+            cout << "Number of Females: " << numFemales << endl;
+            cout << endl << "Total Number of Accounts in Blood Group " << bloodKey << ": " << accountCounter << endl;
+
+            lineFunc(55, "*");
+            cout << endl << endl << "Report Completed" << endl;
+            cout << "(Scroll Up to Review Accounts)" << endl;
+            cout << "Press Enter to Return to Admin Menu..."; cin.ignore();
+            adminFrontPage();
+        }
+        else {
+            cout << endl << "Please Input a Valid Selection..." << endl;
+            goto BloodSearchRestart;
+        }
+    
     }
     else if (adminMenuChoice == "7") {
         cout << endl << "Logging out..." << endl;
@@ -909,6 +1350,15 @@ void adminFrontPage() {
         adminFrontPage();
     }
 }
+
+
+//lineFunc(50, "*");
+//cout << endl << "\tRecipient: " << my_recipient_info.recipientName << endl;
+//cout << "\tValidated: " << my_recipient_info.validated << endl;
+//cout << "\tContact Number: " << my_recipient_info.contactNum << endl;
+//cout << "\tEmail Address: " << my_recipient_info.emailAddr << endl;
+//lineFunc(50, "*");
+
 
 //Recipient Registration Function
 void recipientRegFunc() {           
@@ -1581,6 +2031,53 @@ RegisterRestart:
     }
 }
 
+void getDate() {
+    string tempYear, tempMonth, tempDay;
+    time_t t = std::time(0);   // get time now
+    tm* now = std::localtime(&t);
+
+    cout << now->tm_mday << endl;
+
+
+    if ((now->tm_mon + 1) == 1) { tempMonth = "January"; }
+    if ((now->tm_mon + 1) == 2) { tempMonth = "February"; }
+    if ((now->tm_mon + 1) == 3) { tempMonth = "March"; }
+    if ((now->tm_mon + 1) == 4) { tempMonth = "April"; }
+    if ((now->tm_mon + 1) == 5) { tempMonth = "May"; }
+    if ((now->tm_mon + 1) == 6) { tempMonth = "June"; }
+    if ((now->tm_mon + 1) == 7) { tempMonth = "July"; }
+    if ((now->tm_mon + 1) == 8) { tempMonth = "August"; }
+    if ((now->tm_mon + 1) == 9) { tempMonth = "September"; }
+    if ((now->tm_mon + 1) == 10) { tempMonth = "October"; }
+    if ((now->tm_mon + 1) == 11) { tempMonth = "November"; }
+    if ((now->tm_mon + 1) == 12) { tempMonth = "December"; }
+    cout << tempMonth;
+    //cout << (now->tm_mon + 1) << endl;
+    cout << (now->tm_year + 1900) << endl;
+}
+
+void getTime() {
+    string tempHour, tempMin, tempSec;
+    time_t t = std::time(0);   // get time now
+    tm* now = std::localtime(&t);
+
+    cout << (now->tm_hour - 12) << ":" << now->tm_min;
+    if (now->tm_hour < 12) {
+        cout << " am." << endl;
+    }
+    else {
+        cout << " pm." << endl;
+    }
+}
+
+void fullDateAndTime() {
+    auto now = std::chrono::system_clock::now();
+
+
+    std::time_t time_now = std::chrono::system_clock::to_time_t(now);
+
+    std::cout << std::ctime(&time_now);
+}
 
 //booking functions
 
@@ -1693,12 +2190,13 @@ void book_slot_if_available(int data_row_num){
 
 int main()
 {
-    
- 
-    //recipientInfo my_recipient_info = Get_recipient_info(1, "Recipientinfo.csv");
+   //getDate();
+    //getTime();
 
-    //cout << my_recipient_info.recipientName << " and " << my_recipient_info.emailAddr;
-    //*fstream file("DonorInfo.csv");
+    
+
+
+
     //donorEditFunc();
     menuFunc();
 }
