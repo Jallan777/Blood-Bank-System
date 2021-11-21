@@ -1,3 +1,2 @@
 ﻿  NZ Blood Bank System.cpp
-C:\Users\jacob\OneDrive\Documents\GitHub\Blood-Bank-System\NZ Blood Bank System\NZ Blood Bank System\NZ Blood Bank System.cpp(1627,25): error C2660: 'donorEditFunc': function does not take 1 arguments
-C:\Users\jacob\OneDrive\Documents\GitHub\Blood-Bank-System\NZ Blood Bank System\NZ Blood Bank System\NZ Blood Bank System.cpp(93,6): message : see declaration of 'donorEditFunc'
+  NZ Blood Bank System.vcxproj -> C:\Users\jacob\OneDrive\Documents\GitHub\Blood-Bank-System\NZ Blood Bank System\x64\Debug\NZ Blood Bank System.exe
