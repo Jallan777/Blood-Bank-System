@@ -14,7 +14,7 @@
 #include <cstdio>
 using namespace std;
 
-bool dateAvailable;
+bool dateAvailable = false, isBooked = false;
 int lineFoundOn, unameLine, pwordLine, sameLineCheck;
 string rNameTemp, rPAddTemp, rEAddTemp, rNumTemp, rUNameTemp, rPWordTemp, recipValidTemp, passwordCorrect, infoReplace, infoNew, nameCheck;
 string dFNameTemp, dLNameTemp, dDOBTemp, dDOBDay, dDOBMonth, dDOBYear, dNatTemp, dEthnicTemp, dGenderTemp, dUndCondTemp, dBloodTemp, dNumTemp, dEAddTemp, dPAddTemp, dLastDonateTemp, dUnameTemp, dPwordTemp;
@@ -93,6 +93,7 @@ void donorWriteFunc();
 void menuFunc();
 bool InfoExists(std::string target_info, string file_to_open, int where_to_look);
 void donorEditFunc(donorInfo& donorEdit);
+void BookFunction(int lineNum, int lineLimit);
 
 //Simple Function to write a line of variable length, with any character
 void lineFunc(int length, string type) {
@@ -239,7 +240,7 @@ donorInfo Get_donor_info(int data_row_num, string file_to_open) {
 
 //Donor Post-Login Screen
 void donorFrontPage() {             //Landing page after Donor has logged in
-	string moreInfo, moreInfo2;
+	string moreInfo, moreInfo2, bookingDay, bookingTime, bookingDate;
 	string donorMenuChoice;
 	donorInfo my_donor_info = Get_donor_info((lineFoundOn - 1), "DonorInfo.csv");
 	//Formatting
@@ -354,7 +355,188 @@ void donorFrontPage() {             //Landing page after Donor has logged in
 	}
 	else if (donorMenuChoice == "3") {
 		//Book a visit TODO
+		string menuInput;
 		cout << endl << "Book Your Blood Donation" << endl;
+
+		cout << endl << "\tWhich day would you like to donate on?" << endl;
+		lineFunc(54, "*");
+
+		cout << endl << "[1] Monday" << endl;
+		cout << "[2] Tuesday" << endl;
+		cout << "[3] Wednesday" << endl;
+		cout << "[4] Thursday" << endl;
+		cout << "[5] Friday" << endl;
+		cout << "[6] Saturday" << endl;
+		cout << "[7] Sunday" << endl;
+
+		cout << endl << "Please enter a selection: "; cin >> menuInput;
+		cin.ignore();
+
+		if (menuInput == "1") {
+			string secondMenuInput;
+			cout << endl << "\tWhich time would you like to come in?" << endl;
+			lineFunc(54, "*");
+			bookingDay = "Monday";
+			cout << endl << "[1] 9:00am" << endl;
+			cout << "[2] 10:00am" << endl;
+			cout << "[3] 11:00am" << endl;
+			cout << "[4] 12:00pm" << endl;
+			cout << "[5] 1:00pm" << endl;
+			cout << "[6] 2:00pm" << endl;
+			cout << "[7] 3:00pm" << endl;
+
+			cout << endl << "Please enter a selection: "; cin >> secondMenuInput;
+			cin.ignore();
+			if (secondMenuInput == "1") { bookingTime = "9:00am"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "2") { bookingTime = "10:00am"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "3") { bookingTime = "11:00am"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "4") { bookingTime = "12:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "5") { bookingTime = "1:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "6") { bookingTime = "2:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "7") { bookingTime = "3:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+		}
+		if (menuInput == "2") {
+			string secondMenuInput;
+			cout << endl << "\tWhich time would you like to come in?" << endl;
+			lineFunc(54, "*");
+			bookingDay = "Tuesday";
+			cout << endl << "[1] 9:00am" << endl;
+			cout << "[2] 10:00am" << endl;
+			cout << "[3] 11:00am" << endl;
+			cout << "[4] 12:00pm" << endl;
+			cout << "[5] 1:00pm" << endl;
+			cout << "[6] 2:00pm" << endl;
+			cout << "[7] 3:00pm" << endl;
+
+			cout << endl << "Please enter a selection: "; cin >> secondMenuInput;
+			cin.ignore();
+			if (secondMenuInput == "1") { bookingTime = "9:00am"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "2") { bookingTime = "10:00am"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "3") { bookingTime = "11:00am"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "4") { bookingTime = "12:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "5") { bookingTime = "1:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "6") { bookingTime = "2:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "7") { bookingTime = "3:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+		}
+		if (menuInput == "3") {
+			string secondMenuInput;
+			cout << endl << "\tWhich time would you like to come in?" << endl;
+			lineFunc(54, "*");
+			bookingDay = "Wednesday";
+			cout << endl << "[1] 9:00am" << endl;
+			cout << "[2] 10:00am" << endl;
+			cout << "[3] 11:00am" << endl;
+			cout << "[4] 12:00pm" << endl;
+			cout << "[5] 1:00pm" << endl;
+			cout << "[6] 2:00pm" << endl;
+			cout << "[7] 3:00pm" << endl;
+
+			cout << endl << "Please enter a selection: "; cin >> secondMenuInput;
+			cin.ignore();
+			if (secondMenuInput == "1") { bookingTime = "9:00am"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "2") { bookingTime = "10:00am"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "3") { bookingTime = "11:00am"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "4") { bookingTime = "12:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "5") { bookingTime = "1:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "6") { bookingTime = "2:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "7") { bookingTime = "3:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+		}
+		if (menuInput == "4") {
+			string secondMenuInput;
+			cout << endl << "\tWhich time would you like to come in?" << endl;
+			lineFunc(54, "*");
+			bookingDay = "Thursday";
+			cout << endl << "[1] 9:00am" << endl;
+			cout << "[2] 10:00am" << endl;
+			cout << "[3] 11:00am" << endl;
+			cout << "[4] 12:00pm" << endl;
+			cout << "[5] 1:00pm" << endl;
+			cout << "[6] 2:00pm" << endl;
+			cout << "[7] 3:00pm" << endl;
+
+			cout << endl << "Please enter a selection: "; cin >> secondMenuInput;
+			cin.ignore();
+			if (secondMenuInput == "1") { bookingTime = "9:00am"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "2") { bookingTime = "10:00am"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "3") { bookingTime = "11:00am"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "4") { bookingTime = "12:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "5") { bookingTime = "1:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "6") { bookingTime = "2:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "7") { bookingTime = "3:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+		}
+		if (menuInput == "5") {
+			string secondMenuInput;
+			cout << endl << "\tWhich time would you like to come in?" << endl;
+			lineFunc(54, "*");
+			bookingDay = "Friday";
+			cout << endl << "[1] 9:00am" << endl;
+			cout << "[2] 10:00am" << endl;
+			cout << "[3] 11:00am" << endl;
+			cout << "[4] 12:00pm" << endl;
+			cout << "[5] 1:00pm" << endl;
+			cout << "[6] 2:00pm" << endl;
+			cout << "[7] 3:00pm" << endl;
+
+			cout << endl << "Please enter a selection: "; cin >> secondMenuInput;
+			cin.ignore();
+			if (secondMenuInput == "1") { bookingTime = "9:00am"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "2") { bookingTime = "10:00am"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "3") { bookingTime = "11:00am"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "4") { bookingTime = "12:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "5") { bookingTime = "1:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "6") { bookingTime = "2:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "7") { bookingTime = "3:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+		}
+		if (menuInput == "6") {
+			string secondMenuInput;
+			cout << endl << "\tWhich time would you like to come in?" << endl;
+			lineFunc(54, "*");
+			bookingDay = "Saturday";
+			cout << endl << "[1] 9:00am" << endl;
+			cout << "[2] 10:00am" << endl;
+			cout << "[3] 11:00am" << endl;
+			cout << "[4] 12:00pm" << endl;
+			cout << "[5] 1:00pm" << endl;
+			cout << "[6] 2:00pm" << endl;
+			cout << "[7] 3:00pm" << endl;
+
+			cout << endl << "Please enter a selection: "; cin >> secondMenuInput;
+			cin.ignore();
+			if (secondMenuInput == "1") { bookingTime = "9:00am"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "2") { bookingTime = "10:00am"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "3") { bookingTime = "11:00am"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "4") { bookingTime = "12:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "5") { bookingTime = "1:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "6") { bookingTime = "2:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "7") { bookingTime = "3:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+		}
+		if (menuInput == "7") {
+			string secondMenuInput;
+			cout << endl << "\tWhich time would you like to come in?" << endl;
+			lineFunc(54, "*");
+			bookingDay = "Sunday";
+			cout << endl << "[1] 9:00am" << endl;
+			cout << "[2] 10:00am" << endl;
+			cout << "[3] 11:00am" << endl;
+			cout << "[4] 12:00pm" << endl;
+			cout << "[5] 1:00pm" << endl;
+			cout << "[6] 2:00pm" << endl;
+			cout << "[7] 3:00pm" << endl;
+
+			cout << endl << "Please enter a selection: "; cin >> secondMenuInput;
+			cin.ignore();
+			if (secondMenuInput == "1") { bookingTime = "9:00am"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "2") { bookingTime = "10:00am"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "3") { bookingTime = "11:00am"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "4") { bookingTime = "12:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "5") { bookingTime = "1:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "6") { bookingTime = "2:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+			if (secondMenuInput == "7") { bookingTime = "3:00pm"; bookingDate = bookingDay + " " + bookingTime; cout << endl << "You have been booked in for: " << bookingDate << endl; isBooked = true; }
+		}
+
+
+
+
 		cout << "Press Enter to Return" << endl; cin.ignore();
 		donorFrontPage();
 	}
@@ -364,17 +546,11 @@ void donorFrontPage() {             //Landing page after Donor has logged in
 		cout << "\tAccount Management" << endl;
 		lineFunc(30, "*");
 		cout << endl << endl;
-		cout << "[1] Manage Booking" << endl;
-		cout << "[2] Edit Your Info" << endl << endl;
-		cout << "[3] Return to Donor Menu" << endl;
+
+		cout << "[1] Edit Your Info" << endl << endl;
+		cout << "[2] Return to Donor Menu" << endl;
 		cout << "Please Select an Option: "; cin >> dManageChoice;
 		if (dManageChoice == "1") {
-			//TODO Manage Booking - requires booking system first. would guess each patient is tagged with a unique random number to identify?
-			cout << endl << "Manage Booking" << endl;
-			cout << "Press Enter to Return" << endl; cin.ignore();
-			donorFrontPage();
-		}
-		else if (dManageChoice == "2") {
 			//TODO Edit Info - needs to access file, display current details for user and provide option to change details
 			//-needs working find in csv func 
 			donorInfo donorEdit;
@@ -424,7 +600,7 @@ void donorFrontPage() {             //Landing page after Donor has logged in
 			}
 
 		}
-		else if (dManageChoice == "3") {
+		else if (dManageChoice == "2") {
 			cout << endl << "Press Enter to Return" << endl; cin.ignore();
 			donorFrontPage();
 		}
@@ -2133,13 +2309,14 @@ void is_slot_avavilable(int data_row_num) { // data row num will come from user 
 	ifstream file;
 	std::string line;
 	bool isHeader = true;
-	int row_counter = 0;
+	int row_counter = 0, lineCounter = 0;
 
 
 
-	file.open("bookings.csv", std::ios::in);
+
+	file.open("Bookings.csv", std::ios::in);
 	while (std::getline(file, line)) {
-		// this is the CSV header so skip it      
+		// this is the CSV header so skip it 
 		if (isHeader) {
 			isHeader = false;
 			continue;
@@ -2159,6 +2336,7 @@ void is_slot_avavilable(int data_row_num) { // data row num will come from user 
 			if (values[2] == "yes") {
 				
 				dateAvailable = true;
+
 			}
 			else {
 				
@@ -2176,48 +2354,105 @@ void is_slot_avavilable(int data_row_num) { // data row num will come from user 
 
 
 void book_slot_if_available(int data_row_num) {
-	ifstream file;
+	fstream file;
+	ofstream tempFile;
 	std::string line;
 	bool isHeader = true;
 	int row_counter = 0;
 
 
 
-	file.open("bookings.csv", std::ios::in); // TODO open in write mode and change the yes to a no
-	while (std::getline(file, line)) {
-		// this is the CSV header so skip it      
-		if (isHeader) {
-			isHeader = false;
-			continue;
+	file.open("Bookings.csv", ios::in | ios::out | ios::app); // TODO open in write mode and change the yes to a no
+	tempFile.open("bookingsTemp.csv", ios::out);
+
+
+	int lineCounter = 0;
+	if (dateAvailable = true) {
+
+		while (getline(file, line)) {
+
+			
+			lineCounter++;
+
+			if (lineCounter == data_row_num) {
+				if (isHeader) {
+					isHeader = false;
+					continue;
+				}
+
+				vector<string> values = split(line, ",");
+				// the name is at index[0]        
+				values[0] = values[0];
+				values[1] = values[1];
+				values[2] = "no";
+
+
+
+				//donorInfo my_donor_info = Get_donor_info((lineCounter), "DonorInfo.csv");
+
+
+
+
+				for (string lineValue : values) {
+					tempFile << lineValue << ",";
+				}
+				tempFile << endl;
+
+
+
+			}
+			else {
+
+				tempFile << line << endl;
+
+			}
 		}
-		row_counter++; // make sure we are only looking at the desired row
-
-		if (data_row_num == row_counter) {
-
-
-			//edit the yes in the CSV to a no
-
-
-
-
-
+		file.close();
+		tempFile.close();
+		fstream sourceFile;
+		ofstream destFile;
+		string line2;
+		sourceFile.open("bookingsTemp.csv", ios::in | ios::out | ios::app);
+		destFile.open("Bookings.csv", ios::out);
+		while (getline(sourceFile, line2)) {
+			destFile << line2 << endl;
 		}
 
-	} file.close(); //return false;
+		sourceFile.close();
+		destFile.close();
+		remove("bookingsTemp.csv");
 
 
 
-
-
-
-
-
-
+	}
+	file.close(); //return false;
 }
 
 
 
+void BookFunction(int lineNum,int lineLimit) {
+	int lineToSearch = lineNum;
+	while (lineNum < lineLimit) {
+	
+		is_slot_avavilable(lineToSearch);
+		if (dateAvailable = true) {
+			string bookAsk;
+		AskToBook:
+			cout << endl << "Would you like to book this slot? [Y]/[N]:"; cin >> bookAsk;
+			if (bookAsk == "Y" || bookAsk == "y") {
+				book_slot_if_available(lineToSearch);
+			}
+			else {
+				break;
+			}
+		}
+	}
+	//cout << "Please input the line to search: "; cin >> lineToSearch;
+	
 
+
+	
+}
 
 
 
@@ -2232,75 +2467,13 @@ int main()
 	//getDate();
 	 //getTime();
 
-	 //-----------------------------------------Temp Shit Below
-	 //float array[7][14] = {};
-	 //ifstream file("Data.csv");
-	 //for (int row = 0; row < 7; ++row)
-	 //{
-	 //    string line;
-	 //    getline(file, line);
-	 //    stringstream iss(line);
-
-	 //    for (int col = 0; col < 14; ++col)
-	 //    {
-	 //        string val;
-	 //        getline(iss, val, ',');
-	 //        if (!iss)
-	 //            break;
-	 //        stringstream convertor(val);
-	 //        convertor >> array[row][col];
-	 //    }
-	 //}
-	 ////output array before altering
-	 //cout << "Old Data:\n";
-	 //for (int y = 0; y < 7; y++)
-	 //{
-	 //    for (int x = 0; x < 8; x++)
-	 //    {
-	 //        cout << array[y][x] << " ";
-	 //        if (array[y][x] < 10)
-	 //            cout << " ";
-	 //    }
-	 //    cout << endl;
-	 //}
-	 ////increment all values and send back to file
-	 //ofstream out("Data.csv");
-	 //for (int y = 0; y < 7; y++)
-	 //{
-	 //    for (int x = 0; x < 8; x++)
-	 //    {
-	 //        array[y][x]++;
-	 //        out << array[y][x] << ",";
-	 //    }
-	 //    out << endl;
-	 //}
-	 ////output new data sent to file
-	 //cout << "\nNew Data:\n";
-	 //for (int y = 0; y < 7; y++)
-	 //{
-	 //    for (int x = 0; x < 8; x++)
-	 //    {
-	 //        cout << array[y][x] << " ";
-	 //        if (array[y][x] < 10)
-	 //            cout << " ";
-	 //    }
-	 //    cout << endl;
-	 //}
-	 //cout << "Open file Data.csv to confirm the above data.";
-
 	/*ofstream file("DonorInfoTemp.csv");
 	file.clear();*/
 
 	//donorEditFunc();
-   //menuFunc();
-	is_slot_avavilable(13);
-	if (dateAvailable = true) {
-		cout << "Date Available";
-	}
-	else {
-
-		cout << "Date Taken";
-	}
+    menuFunc();
+	
+	//BookFunction();
 
 }
 
