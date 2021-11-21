@@ -146,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="AdminInfo.csv" />
+    <None Include="Bookings.csv" />
     <None Include="DonorInfo.csv" />
     <None Include="Patient info.csv" />
     <None Include="RecipientInfo.csv" />

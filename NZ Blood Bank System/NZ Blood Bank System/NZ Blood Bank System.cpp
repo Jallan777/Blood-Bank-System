@@ -14,6 +14,7 @@
 #include <cstdio>
 using namespace std;
 
+bool dateAvailable;
 int lineFoundOn, unameLine, pwordLine, sameLineCheck;
 string rNameTemp, rPAddTemp, rEAddTemp, rNumTemp, rUNameTemp, rPWordTemp, recipValidTemp, passwordCorrect, infoReplace, infoNew, nameCheck;
 string dFNameTemp, dLNameTemp, dDOBTemp, dDOBDay, dDOBMonth, dDOBYear, dNatTemp, dEthnicTemp, dGenderTemp, dUndCondTemp, dBloodTemp, dNumTemp, dEAddTemp, dPAddTemp, dLastDonateTemp, dUnameTemp, dPwordTemp;
@@ -117,7 +118,7 @@ void copyDataBasic(string srcFile, string dstFile) {
 }
 
 void quickReplaceFunc(string source, string dest) {
-	
+
 }
 
 // for string delimiter                                                      <---- copied from stack overflow https://stackoverflow.com/questions/14265581/parse-split-a-string-in-c-using-string-delimiter-standard-c
@@ -1566,66 +1567,66 @@ R1:    cout << endl << "First Name\t\t\t: "; getline(cin, donorEdit.firstName); 
 
 R2:    cout << "Last Name\t\t\t: "; getline(cin, donorEdit.lastName); if (donorEdit.lastName == "" || donorEdit.lastName == " ") { cout << endl << "Text Field is Empty!" << endl; goto R2; }
 
-	    cout << "Date of Birth\t\t\t(DD/MM/YYYY)";
-	R3:    cout << endl << "\t\t\tDay\t: "; getline(cin, dDOBDay); if (dDOBDay == "" || dDOBDay == " ") { cout << endl << "Text Field is Empty!" << endl; goto R3; }
-	
-	R4:    cout << "\t\t\tMonth\t: "; getline(cin, dDOBMonth); if (dDOBMonth == "" || dDOBMonth == " ") { cout << endl << "Text Field is Empty!" << endl; goto R4; }
-	
-	R5:    cout << "\t\t\tYear\t: "; getline(cin, dDOBYear); if (dDOBYear == "" || dDOBYear == " ") { cout << endl << "Please input Year" << endl; goto R5; }
-	
-	    donorEdit.dob = dDOBDay + "/" + dDOBMonth + "/" + dDOBYear; //DOB split into different parts to try make sure the format is the same when put into struct
-	R6:    cout << "Nationality\t\t\t: "; getline(cin, donorEdit.nationality); if (donorEdit.nationality == "" || donorEdit.nationality == " ") { cout << endl << "Text Field is Empty!" << endl; goto R6; }
-	
-	R7:    cout << "Ethnicity\t\t\t: "; getline(cin, donorEdit.ethnicity); if (donorEdit.ethnicity == "" || donorEdit.ethnicity == " ") { cout << endl << "Text Field is Empty!" << endl; goto R7; }
-	
-	R8:    cout << "Gender\t\t\t\t: "; getline(cin, donorEdit.gender); if (donorEdit.gender == "" || donorEdit.gender == " ") { cout << endl << "Text Field is Empty!" << endl; goto R8; }
-	
-	R9:    cout << "Known Underlying Conditions\t: "; getline(cin, donorEdit.underlyCond); if (donorEdit.underlyCond == "" || donorEdit.underlyCond == " ") { cout << endl << "Text Field is Empty!" << endl; goto R9; }
-	
-	    cout << "Please select your Blood Group\t:";            //Asks user to select their blood group from a list of selections
-	    cout << endl << endl << "\t[1] A+/-\t[2] B+/-";
-	    cout << endl << "\t[3] AB+/-\t[4] O+/-" << endl << endl;
-	BloodSelectAskAgain:
-	    cout << "Blood Group: "; cin >> bloodSelect;
-	    if (bloodSelect == "1") {
-	        bloodSelect = "A";
-	    }
-	    else if (bloodSelect == "2") {
-	        bloodSelect = "B";
-	    }
-	    else if (bloodSelect == "3") {
-	        bloodSelect = "AB";
-	    }
-	    else if (bloodSelect == "4") {
-	        bloodSelect = "O";
-	    }
-	    else {
-	        cout << endl << "Please select a valid option" << endl;
-	        goto BloodSelectAskAgain;
-	    }
-	    cin.ignore();
-		donorEdit.bloodGroup = bloodSelect;
-	
-	R10:    cout << endl << "Contact Number\t\t\t: "; getline(cin, donorEdit.contactNum); if (donorEdit.contactNum == "" || donorEdit.contactNum == " ") { cout << endl << "Text Field is Empty!" << endl; goto R10; }
-	
-	R11:    cout << "Email Address\t\t\t: "; getline(cin, donorEdit.emailAddr); if (donorEdit.emailAddr == "" || donorEdit.emailAddr == " ") { cout << endl << "Text Field is Empty!" << endl; goto R11; }
-	
-	    cout << "Physical Address\t\t:";                                        //Breaks down address into parts, so user doesn't try to use comma's to seperate values
-	R12:    cout << endl << "\t(Street)\t\t: "; getline(cin, dStreet); if (dStreet == "" || dStreet == " ") { cout << endl << "Text Field is Empty!" << endl; goto R12; }
-	
-	R13:    cout << "\t(Suburb/Town)\t\t: "; getline(cin, dSuburb); if (dSuburb == "" || dSuburb == " ") { cout << endl << "Text Field is Empty!" << endl; goto R13; }
-	
-	R14:    cout << "\t(City)\t\t\t: "; getline(cin, dCity); if (dCity == "" || dCity == " ") { cout << endl << "Text Field is Empty!" << endl; goto R14; }
-	
-		donorEdit.physAddr = dStreet + "/" + dSuburb + "/" + dCity;     //Address parts combined into one string
-	    cout << "Date of Last Donation" << endl;
-	    cout << "(Press Enter if Unknown)\t: "; getline(cin, donorEdit.lastDonation);
-	    if (donorEdit.lastDonation == "") {                                            //If statement allows user to press enter and move past this question, and fills data with "unknown"
-			donorEdit.lastDonation = "Unknown";
-	    }
-	R15:    cout << "Username\t\t\t: "; getline(cin, donorEdit.username); if (donorEdit.username == "" || donorEdit.username == " ") { cout << endl << "Text Field is Empty!" << endl; goto R15; }
-	
-	R16:    cout << "Password\t\t\t: "; getline(cin, donorEdit.password); if (donorEdit.password == "" || donorEdit.password == " ") { cout << endl << "Text Field is Empty!" << endl; goto R16; }
+	cout << "Date of Birth\t\t\t(DD/MM/YYYY)";
+R3:    cout << endl << "\t\t\tDay\t: "; getline(cin, dDOBDay); if (dDOBDay == "" || dDOBDay == " ") { cout << endl << "Text Field is Empty!" << endl; goto R3; }
+
+R4:    cout << "\t\t\tMonth\t: "; getline(cin, dDOBMonth); if (dDOBMonth == "" || dDOBMonth == " ") { cout << endl << "Text Field is Empty!" << endl; goto R4; }
+
+R5:    cout << "\t\t\tYear\t: "; getline(cin, dDOBYear); if (dDOBYear == "" || dDOBYear == " ") { cout << endl << "Please input Year" << endl; goto R5; }
+
+	donorEdit.dob = dDOBDay + "/" + dDOBMonth + "/" + dDOBYear; //DOB split into different parts to try make sure the format is the same when put into struct
+R6:    cout << "Nationality\t\t\t: "; getline(cin, donorEdit.nationality); if (donorEdit.nationality == "" || donorEdit.nationality == " ") { cout << endl << "Text Field is Empty!" << endl; goto R6; }
+
+R7:    cout << "Ethnicity\t\t\t: "; getline(cin, donorEdit.ethnicity); if (donorEdit.ethnicity == "" || donorEdit.ethnicity == " ") { cout << endl << "Text Field is Empty!" << endl; goto R7; }
+
+R8:    cout << "Gender\t\t\t\t: "; getline(cin, donorEdit.gender); if (donorEdit.gender == "" || donorEdit.gender == " ") { cout << endl << "Text Field is Empty!" << endl; goto R8; }
+
+R9:    cout << "Known Underlying Conditions\t: "; getline(cin, donorEdit.underlyCond); if (donorEdit.underlyCond == "" || donorEdit.underlyCond == " ") { cout << endl << "Text Field is Empty!" << endl; goto R9; }
+
+	cout << "Please select your Blood Group\t:";            //Asks user to select their blood group from a list of selections
+	cout << endl << endl << "\t[1] A+/-\t[2] B+/-";
+	cout << endl << "\t[3] AB+/-\t[4] O+/-" << endl << endl;
+BloodSelectAskAgain:
+	cout << "Blood Group: "; cin >> bloodSelect;
+	if (bloodSelect == "1") {
+		bloodSelect = "A";
+	}
+	else if (bloodSelect == "2") {
+		bloodSelect = "B";
+	}
+	else if (bloodSelect == "3") {
+		bloodSelect = "AB";
+	}
+	else if (bloodSelect == "4") {
+		bloodSelect = "O";
+	}
+	else {
+		cout << endl << "Please select a valid option" << endl;
+		goto BloodSelectAskAgain;
+	}
+	cin.ignore();
+	donorEdit.bloodGroup = bloodSelect;
+
+R10:    cout << endl << "Contact Number\t\t\t: "; getline(cin, donorEdit.contactNum); if (donorEdit.contactNum == "" || donorEdit.contactNum == " ") { cout << endl << "Text Field is Empty!" << endl; goto R10; }
+
+R11:    cout << "Email Address\t\t\t: "; getline(cin, donorEdit.emailAddr); if (donorEdit.emailAddr == "" || donorEdit.emailAddr == " ") { cout << endl << "Text Field is Empty!" << endl; goto R11; }
+
+	cout << "Physical Address\t\t:";                                        //Breaks down address into parts, so user doesn't try to use comma's to seperate values
+R12:    cout << endl << "\t(Street)\t\t: "; getline(cin, dStreet); if (dStreet == "" || dStreet == " ") { cout << endl << "Text Field is Empty!" << endl; goto R12; }
+
+R13:    cout << "\t(Suburb/Town)\t\t: "; getline(cin, dSuburb); if (dSuburb == "" || dSuburb == " ") { cout << endl << "Text Field is Empty!" << endl; goto R13; }
+
+R14:    cout << "\t(City)\t\t\t: "; getline(cin, dCity); if (dCity == "" || dCity == " ") { cout << endl << "Text Field is Empty!" << endl; goto R14; }
+
+	donorEdit.physAddr = dStreet + "/" + dSuburb + "/" + dCity;     //Address parts combined into one string
+	cout << "Date of Last Donation" << endl;
+	cout << "(Press Enter if Unknown)\t: "; getline(cin, donorEdit.lastDonation);
+	if (donorEdit.lastDonation == "") {                                            //If statement allows user to press enter and move past this question, and fills data with "unknown"
+		donorEdit.lastDonation = "Unknown";
+	}
+R15:    cout << "Username\t\t\t: "; getline(cin, donorEdit.username); if (donorEdit.username == "" || donorEdit.username == " ") { cout << endl << "Text Field is Empty!" << endl; goto R15; }
+
+R16:    cout << "Password\t\t\t: "; getline(cin, donorEdit.password); if (donorEdit.password == "" || donorEdit.password == " ") { cout << endl << "Text Field is Empty!" << endl; goto R16; }
 
 	cout << endl << endl;
 
@@ -1712,7 +1713,7 @@ void donorLoginFunc() {
 }
 
 //Admin Login Function
-void adminLoginFunc() { 
+void adminLoginFunc() {
 	//Formatting
 	cout << endl << endl;
 	cout << "\tAdmin Login" << endl;
@@ -1831,32 +1832,32 @@ void donorWriteFunc() {
 
 
 //Func to Edit info in donor csv
-void donorEditFunc(donorInfo&donorEdit) {
+void donorEditFunc(donorInfo& donorEdit) {
 
 	string line;
 	donorInfo my_donor_info = Get_donor_info((lineFoundOn - 1), "DonorInfo.csv");
-	string checkTemp = my_donor_info.username;
-	string check1 = my_donor_info.firstName, check2 = my_donor_info.lastName, check3 = my_donor_info.username;
+
+
 	fstream file;
 	ofstream fileTemp;
-	
+
 	file.open(donorFilePath, ios::in | ios::out | ios::app);
-	
+
 	fileTemp.open("DonorInfoTemp.csv", ios::out);
-	
+
 	InfoExists(my_donor_info.firstName, donorFilePath, First_Name); int num1 = lineFoundOn;
-	
+
 	InfoExists(my_donor_info.username, donorFilePath, donor_username); int num3 = lineFoundOn;
-	int lineCounter = 0;						
+	int lineCounter = 0;
 	if (num1 == num3) {
 
 		while (getline(file, line)) {
-			
-			
+
+
 			lineCounter++;
 
-			if (lineCounter == (lineFoundOn)) {
-				
+			if (lineCounter == lineFoundOn) {
+
 				cout << donorEdit.firstName;
 				vector<string> values = split(line, ",");
 				// the name is at index[0]            
@@ -1874,26 +1875,26 @@ void donorEditFunc(donorInfo&donorEdit) {
 				values[11] = donorEdit.lastDonation;
 				values[12] = donorEdit.username;
 				values[13] = donorEdit.password;
-				
+
 
 
 				donorInfo my_donor_info = Get_donor_info((lineCounter), "DonorInfo.csv");
-				
 
 
-				
+
+
 				for (string lineValue : values) {
 					fileTemp << lineValue << ",";
 				}
 				fileTemp << endl;
-				
-				
+
+
 
 			}
 			else {
-				
+
 				fileTemp << line << endl;
-				
+
 			}
 		}
 		file.close();
@@ -1910,11 +1911,11 @@ void donorEditFunc(donorInfo&donorEdit) {
 		sourceFile.close();
 		destFile.close();
 		remove("DonorInfoTemp.csv");
-		
 
-		
+
+
 	}
-} 
+}
 
 bool InfoExists(std::string target_info, string file_to_open, int where_to_look) {
 
@@ -2127,7 +2128,7 @@ void fullDateAndTime() {
 
 //booking functions
 
-bool is_slot_avavilable(int data_row_num) { // data row num will come from user input
+void is_slot_avavilable(int data_row_num) { // data row num will come from user input
 
 	ifstream file;
 	std::string line;
@@ -2156,17 +2157,19 @@ bool is_slot_avavilable(int data_row_num) { // data row num will come from user 
 			file.close();
 
 			if (values[2] == "yes") {
-				return true;
+				
+				dateAvailable = true;
 			}
 			else {
-				return false;
+				
+				dateAvailable = false;
 			}
 
 
 
 		}
 
-	} file.close(); return false;
+	} file.close();
 
 
 }
@@ -2288,7 +2291,16 @@ int main()
 	/*ofstream file("DonorInfoTemp.csv");
 	file.clear();*/
 
-	 //donorEditFunc();
-	menuFunc();
+	//donorEditFunc();
+   //menuFunc();
+	is_slot_avavilable(13);
+	if (dateAvailable = true) {
+		cout << "Date Available";
+	}
+	else {
+
+		cout << "Date Taken";
+	}
+
 }
 
