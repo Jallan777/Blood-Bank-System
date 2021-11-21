@@ -1712,7 +1712,7 @@ void donorLoginFunc() {
 }
 
 //Admin Login Function
-void adminLoginFunc() { //TODO use very similar logic to recipientLoginFunc
+void adminLoginFunc() { 
 	//Formatting
 	cout << endl << endl;
 	cout << "\tAdmin Login" << endl;
